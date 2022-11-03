@@ -4,22 +4,38 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".RegisterUser">
 
     <TextView
         android:id="@+id/banner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
-        android:text="@string/app_name"
+        android:text="@string/welcome_to_socal_beaches"
         android:textAlignment="center"
         android:textSize="50sp"
-        android:paddingTop="50dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
 
+    <EditText
+        android:id="@+id/full_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="12"
+        android:hint="@string/full_name"
+        android:autofillHints="name"
+        android:inputType="textPersonName"
+        android:textSize="24sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/banner"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
     <EditText
         android:id="@+id/email"
         android:layout_width="wrap_content"
@@ -29,8 +45,7 @@
         android:autofillHints="emailAddress"
         android:inputType="textEmailAddress"
         android:textSize="24sp"
-        android:layout_marginTop="50dp"
-        app:layout_constraintTop_toBottomOf="@id/banner"
+        app:layout_constraintTop_toBottomOf="@id/full_name"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         />
@@ -47,26 +62,28 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         />
-    <Button
-        android:id="@+id/login_button"
-        android:ems="10"
+    <EditText
+        android:id="@+id/verify_password"
         android:layout_width="wrap_content"
-        android:layout_height="70dp"
-        android:layout_marginTop="50dp"
-        android:text="@string/login"
+        android:layout_height="wrap_content"
+        android:ems="12"
+        android:hint="@string/verify_password"
+        android:autofillHints="password"
+        android:inputType="textPassword"
         android:textSize="24sp"
         app:layout_constraintTop_toBottomOf="@id/password"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         />
-    <TextView
+    <Button
         android:id="@+id/register"
+        android:ems="10"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/register_here"
-        android:textSize="15sp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintTop_toBottomOf="@id/login_button"
+        android:layout_height="70dp"
+        android:text="@string/register"
+        android:textSize="24sp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/verify_password"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         />
@@ -82,5 +99,5 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         />
-
 </androidx.constraintlayout.widget.ConstraintLayout>
+

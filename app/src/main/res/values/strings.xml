@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Socal Beaches For Life</string>
+    <string name="register">Register</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="email_address">Email Address</string>
+    <string name="welcome_to_socal_beaches">Welcome to Socal Beaches!</string>
+    <string name="full_name">Full Name</string>
+    <string name="verify_password">Verify Password</string>
+    <string name="register_here">Register Here!</string>
 </resources>
