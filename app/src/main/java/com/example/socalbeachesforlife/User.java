@@ -1,7 +1,7 @@
 package com.example.socalbeachesforlife;
 
 public class User {
-    private String fullName, email;
+    public String fullName, email;
 
     public User() {
 
