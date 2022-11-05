@@ -31,11 +31,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        mAuth = FirebaseAuth.getInstance();
+
         register = (TextView) findViewById(R.id.register);
         register.setOnClickListener(this);
 
-        login = (Button) findViewById(R.id.login_button);
-        register.setOnClickListener(this);
+        login = (Button) findViewById(R.id.loginButton);
+        login.setOnClickListener(this);
 
         editTextEmail = (EditText) findViewById(R.id.email);
         editTextPassword = (EditText) findViewById(R.id.password);
@@ -46,11 +48,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
+            case R.id.loginButton:
+                userLogin();
+                break;
             case R.id.register:
                 startActivity (new Intent(this, RegisterUser.class));
-                break;
-            case R.id.login_button:
-                userLogin();
                 break;
         }
     }
@@ -58,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void userLogin() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
-
         if(email.isEmpty()) {
             editTextEmail.setError("Email is Required!");
             editTextEmail.requestFocus();
