@@ -9,7 +9,10 @@
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_register_user.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_restaurant_list.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/current_place_menu.xml" value="0.1828125" />
+        <entry key="app/src/main/res/layout/custom_info_contents.xml" value="0.1828125" />
         <entry key="app/src/main/res/layout/restaurant_item.xml" value="0.22871376811594202" />
+        <entry key="app/src/main/res/menu/current_place_menu.xml" value="0.1828125" />
       </map>
     </option>
   </component>
