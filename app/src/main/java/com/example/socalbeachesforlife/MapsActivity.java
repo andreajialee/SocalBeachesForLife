@@ -386,36 +386,6 @@ public class MapsActivity extends AppCompatActivity
                 .show();
     }
 
-    private void getNearbyBeaches() {
-        AutocompleteSessionToken token = AutocompleteSessionToken.newInstance();
-        // Create a RectangularBounds object.
-        RectangularBounds bounds = RectangularBounds.newInstance(
-                new LatLng(-33.880490, 151.184363),
-                new LatLng(-33.858754, 151.229596));
-        // Use the builder to create a FindAutocompletePredictionsRequest.
-        FindAutocompletePredictionsRequest request = FindAutocompletePredictionsRequest.builder()
-                // Call either setLocationBias() OR setLocationRestriction().
-                .setLocationBias(bounds)
-                //.setLocationRestriction(bounds)
-                .setOrigin(new LatLng(-33.8749937,151.2041382))
-                .setTypesFilter(Arrays.asList("natural_feature"))
-                .setSessionToken(token)
-                .setQuery("beach")
-                .build();
-
-        placesClient.findAutocompletePredictions(request).addOnSuccessListener((response) -> {
-            for (AutocompletePrediction prediction : response.getAutocompletePredictions()) {
-                Log.i(TAG, prediction.getPlaceId());
-                Log.i(TAG, prediction.getPrimaryText(null).toString());
-            }
-        }).addOnFailureListener((exception) -> {
-            if (exception instanceof ApiException) {
-                ApiException apiException = (ApiException) exception;
-                Log.e(TAG, "Place not found: " + apiException.getStatusCode());
-            }
-        });
-    }
-
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
      */
