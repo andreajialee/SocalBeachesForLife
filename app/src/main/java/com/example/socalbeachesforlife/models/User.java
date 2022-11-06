@@ -1,4 +1,4 @@
-package com.example.socalbeachesforlife;
+package com.example.socalbeachesforlife.models;
 
 public class User {
     public String fullName, email;
