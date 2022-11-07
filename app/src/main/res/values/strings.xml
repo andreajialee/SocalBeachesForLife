@@ -13,4 +13,7 @@
     <string name="default_info_title">Default Location</string>
     <string name="default_info_snippet">No places found, because location is disabled.</string>
     <string name="pick_place">Closest 5 Beaches</string>
+    <string name="profile">Profile</string>
+    <string name="logout">Logout</string>
+    <string name="AddReview">Add Review</string>
 </resources>
