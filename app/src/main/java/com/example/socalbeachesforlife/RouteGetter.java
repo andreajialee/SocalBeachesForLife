@@ -46,5 +46,6 @@ public class RouteGetter extends AsyncTask<Object, String, String> {
         double ETA = Double.parseDouble(directionsGooglePlace.get("duration"));
 
         NearbyBeaches.ETA = ETA;
+        ParkingLots.ETA = ETA;
     }
 }

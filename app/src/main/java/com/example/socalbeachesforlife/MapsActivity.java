@@ -63,7 +63,8 @@ public class MapsActivity extends AppCompatActivity
     private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap map;
     private CameraPosition cameraPosition;
-    double latitude, longitude;
+    private static double latitude, longitude;
+    private static double blatitude, blongitude;
 
     // The entry point to the Places API.
     private PlacesClient placesClient;
@@ -92,6 +93,11 @@ public class MapsActivity extends AppCompatActivity
 
     public static Location getCurrLoc() {
         return lastKnownLocation;
+    }
+
+    public static LatLng getCurrBeachLoc() {
+        LatLng latLng = new LatLng(blatitude, blongitude);
+        return latLng;
     }
 
     @Override
@@ -222,9 +228,8 @@ public class MapsActivity extends AppCompatActivity
                             longitude = lastKnownLocation.getLongitude();
                             Object dataTransfer[] = new Object[2];
                             NearbyBeaches nearbyBeaches = new NearbyBeaches();
-                            map.clear();
                             String beach = "beach";
-                            String url = getUrl(latitude, longitude, beach);
+                            String url = getUrl(latitude, longitude, beach, 100000, true);
                             dataTransfer[0] = map;
                             dataTransfer[1] = url;
 
@@ -285,13 +290,15 @@ public class MapsActivity extends AppCompatActivity
         updateLocationUI();
     }
 
-    private String getUrl(double latitude, double longitude, String nearbyPlace)
+    private String getUrl(double latitude, double longitude, String nearbyPlace, int radius, boolean feature)
     {
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlaceUrl.append("location="+latitude+","+longitude);
-        googlePlaceUrl.append("&radius="+100000);
+        googlePlaceUrl.append("&radius="+radius);
         googlePlaceUrl.append("&name="+nearbyPlace);
-        googlePlaceUrl.append("&type=natural_feature");
+        if(feature) {
+            googlePlaceUrl.append("&type=natural_feature");
+        }
         googlePlaceUrl.append("&sensor=true");
         googlePlaceUrl.append("&key="+MAPS_API_KEY);
 
@@ -339,6 +346,18 @@ public class MapsActivity extends AppCompatActivity
                 // Position the map's camera at the location of the marker.
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLatLng,
                         DEFAULT_ZOOM));
+
+                blatitude = likelyPlaceLatLngs[which].latitude;
+                blongitude = likelyPlaceLatLngs[which].longitude;
+                Object dataTransfer[] = new Object[2];
+                ParkingLots parkingLots = new ParkingLots();
+                String parking = "parking";
+                String url = getUrl(blatitude, blongitude, parking, 10000, false);
+                dataTransfer[0] = map;
+                dataTransfer[1] = url;
+
+                parkingLots.execute(dataTransfer);
+                Toast.makeText(MapsActivity.this, "Showing Nearby Beaches", Toast.LENGTH_LONG).show();
             }
         };
 
