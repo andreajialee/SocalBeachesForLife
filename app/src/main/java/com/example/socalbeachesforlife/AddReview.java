@@ -30,6 +30,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class AddReview extends AppCompatActivity implements View.OnClickListener {
     private TextView banner;
@@ -115,9 +116,11 @@ public class AddReview extends AppCompatActivity implements View.OnClickListener
             return;
         }
 
+        String id = UUID.randomUUID().toString();
+
         if (imageURI != null) {
             storage = FirebaseStorage.getInstance();
-            StorageReference ref = storage.getReference().child("images/" + mAuth.getCurrentUser().getUid());
+            StorageReference ref = storage.getReference().child("images/" + id);
             ref.putFile(imageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
@@ -136,7 +139,7 @@ public class AddReview extends AppCompatActivity implements View.OnClickListener
         DatabaseReference reference = rootNode.getReference("Users");
         DatabaseReference reference1 = reference.child(mAuth.getCurrentUser().getUid());
 
-        reference1.child("review").setValue(review).addOnCompleteListener(new OnCompleteListener<Void>() {
+        reference1.child("review").child(id).setValue(review).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()) {
