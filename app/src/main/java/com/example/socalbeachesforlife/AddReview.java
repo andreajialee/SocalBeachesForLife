@@ -135,7 +135,20 @@ public class AddReview extends AppCompatActivity implements View.OnClickListener
         DatabaseReference reference = rootNode.getReference("users");
         DatabaseReference reference1 = reference.child(mAuth.getCurrentUser().getUid());
 
-        reference1.child("review").setValue(review);
-
+        reference1.child("review").setValue(review).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()) {
+                    // Redirect to user profile
+                    Toast.makeText(AddReview.this, "Upload!", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.VISIBLE);
+                    startActivity (new Intent(AddReview.this, Profile.class));
+                }
+                else {
+                    Toast.makeText(AddReview.this, "Failed to upload. Please try again", Toast.LENGTH_LONG).show();
+                    progressBar.setVisibility(View.INVISIBLE);
+                }
+            }
+        });
     }
 }
