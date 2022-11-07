@@ -12,5 +12,5 @@
     <string name="option_get_place">Get Place</string>
     <string name="default_info_title">Default Location</string>
     <string name="default_info_snippet">No places found, because location is disabled.</string>
-    <string name="pick_place">Choose a place</string>
+    <string name="pick_place">Closest 5 Beaches</string>
 </resources>
