@@ -116,6 +116,7 @@ public class AddReview extends AppCompatActivity implements View.OnClickListener
         }
 
         if (imageURI != null) {
+            storage = FirebaseStorage.getInstance();
             StorageReference ref = storage.getReference().child("images/" + mAuth.getCurrentUser().getUid());
             ref.putFile(imageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -132,7 +133,7 @@ public class AddReview extends AppCompatActivity implements View.OnClickListener
         Review review = new Review(rating, name, comment, isAnon);
 
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
-        DatabaseReference reference = rootNode.getReference("users");
+        DatabaseReference reference = rootNode.getReference("Users");
         DatabaseReference reference1 = reference.child(mAuth.getCurrentUser().getUid());
 
         reference1.child("review").setValue(review).addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -140,12 +141,12 @@ public class AddReview extends AppCompatActivity implements View.OnClickListener
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()) {
                     // Redirect to user profile
-                    Toast.makeText(AddReview.this, "Upload!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddReview.this, "Uploaded review!", Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.VISIBLE);
                     startActivity (new Intent(AddReview.this, Profile.class));
                 }
                 else {
-                    Toast.makeText(AddReview.this, "Failed to upload. Please try again", Toast.LENGTH_LONG).show();
+                    Toast.makeText(AddReview.this, "Failed to upload review. Please try again", Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.INVISIBLE);
                 }
             }
