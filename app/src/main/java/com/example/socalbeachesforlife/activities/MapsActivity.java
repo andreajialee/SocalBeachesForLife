@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,6 +83,8 @@ public class MapsActivity extends AppCompatActivity
     public static LatLng[] likelyPlaceLatLngs;
 
     private int REST_RADIUS = 1000;
+    private Button mRadius;
+    private final String[] radi = new String[]{"1000", "2000", "3000"};
 
     public static Location getCurrLoc() {
         return lastKnownLocation;
@@ -112,6 +115,13 @@ public class MapsActivity extends AppCompatActivity
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
+        mRadius = (Button) findViewById(R.id.radius_button);
+        mRadius.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showRadi();
+            }
+        });
         // Build the map.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -122,6 +132,34 @@ public class MapsActivity extends AppCompatActivity
         location.setLatitude(34.024805);
         location.setLongitude(-118.285404);
         lastKnownLocation = location;
+    }
+
+    private void showRadi() {
+        // Ask the user to choose the place where they are now.
+        DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // The "which" argument contains the position of the selected item.
+                String radius = radi[which];
+                // Update Radius
+                REST_RADIUS = Integer.valueOf(radius);
+                map.clear();
+                getDeviceLocation();
+                Object dataTransfer[] = new Object[2];
+                ParkingLots parkingLots = new ParkingLots();
+                String parking = "parking";
+                String url = getUrl(blatitude, blongitude, parking, REST_RADIUS, false);
+                dataTransfer[0] = map;
+                dataTransfer[1] = url;
+                parkingLots.execute(dataTransfer);
+                Toast.makeText(MapsActivity.this, "Updated Radius", Toast.LENGTH_LONG).show();
+            }
+        };
+        // Display the dialog.
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle("Choose your radius")
+                .setItems(radi, listener)
+                .show();
     }
 
     /**

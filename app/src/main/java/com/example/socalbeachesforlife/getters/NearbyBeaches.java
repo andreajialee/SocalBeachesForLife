@@ -34,6 +34,8 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
     private LatLng[] likelyPlaceLatLngs = new LatLng[5];
     private double[] likelyPlaceETA = new double[5];
     private int radius;
+    private boolean circleDrawn = false;
+    private Circle circle;
 
     public NearbyBeaches(int radius) {
         this.radius = radius;
@@ -117,11 +119,13 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
             mMap.moveCamera(CameraUpdateFactory.newLatLng(likelyPlaceLatLngs[i]));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                Circle circle = mMap.addCircle(new CircleOptions()
+                circle = mMap.addCircle(new CircleOptions()
                         .center(likelyPlaceLatLngs[i])
                         .radius(radius)
                         .strokeColor(Color.RED)
                         .fillColor(Color.argb(.25f, 0f, 0f, 1f)));
+                circleDrawn = true;
+
             }
             Object dataTransfer[] = new Object[2];
             NearbyResaurants nearbyResaurants = new NearbyResaurants();
