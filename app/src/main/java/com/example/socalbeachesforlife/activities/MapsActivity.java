@@ -81,6 +81,8 @@ public class MapsActivity extends AppCompatActivity
     public static String[] likelyPlaceNames;
     public static LatLng[] likelyPlaceLatLngs;
 
+    private int REST_RADIUS = 1000;
+
     public static Location getCurrLoc() {
         return lastKnownLocation;
     }
@@ -226,7 +228,7 @@ public class MapsActivity extends AppCompatActivity
                             map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(latitude,longitude), DEFAULT_ZOOM));
                             Object dataTransfer[] = new Object[2];
-                            NearbyBeaches nearbyBeaches = new NearbyBeaches();
+                            NearbyBeaches nearbyBeaches = new NearbyBeaches(REST_RADIUS);
                             String beach = "beach";
                             String url = getUrl(latitude, longitude, beach, 100000, true);
                             dataTransfer[0] = map;
@@ -349,7 +351,7 @@ public class MapsActivity extends AppCompatActivity
                 Object dataTransfer[] = new Object[2];
                 ParkingLots parkingLots = new ParkingLots();
                 String parking = "parking";
-                String url = getUrl(blatitude, blongitude, parking, 10000, false);
+                String url = getUrl(blatitude, blongitude, parking, REST_RADIUS, false);
                 dataTransfer[0] = map;
                 dataTransfer[1] = url;
 

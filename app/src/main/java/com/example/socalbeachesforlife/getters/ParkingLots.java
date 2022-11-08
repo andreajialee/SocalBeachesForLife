@@ -96,6 +96,8 @@ public class ParkingLots extends AsyncTask<Object, String, String> {
 
         }
         for(int i = 0; i < 2; i++) {
+            if(likelyPlaceLatLngs[i] == null)
+                continue;
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(likelyPlaceLatLngs[i]);
             markerOptions.title(likelyPlaceNames[i]);

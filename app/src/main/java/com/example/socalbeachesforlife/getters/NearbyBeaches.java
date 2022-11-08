@@ -33,7 +33,11 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
     private String[] likelyPlaceNames = new String[5];
     private LatLng[] likelyPlaceLatLngs = new LatLng[5];
     private double[] likelyPlaceETA = new double[5];
+    private int radius;
 
+    public NearbyBeaches(int radius) {
+        this.radius = radius;
+    }
     @Override
     protected String doInBackground(Object... objects) {
         mMap = (GoogleMap)objects[0];
@@ -112,7 +116,6 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
             mMap.addMarker(markerOptions);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(likelyPlaceLatLngs[i]));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-            int radius = 3000;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                 Circle circle = mMap.addCircle(new CircleOptions()
                         .center(likelyPlaceLatLngs[i])
