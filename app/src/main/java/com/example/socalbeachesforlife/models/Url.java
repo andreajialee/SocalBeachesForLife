@@ -1,4 +1,4 @@
-package com.example.socalbeachesforlife;
+package com.example.socalbeachesforlife.models;
 
 import java.io.BufferedReader;
 import java.io.IOException;

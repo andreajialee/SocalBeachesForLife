@@ -1,16 +1,11 @@
-package com.example.socalbeachesforlife;
+package com.example.socalbeachesforlife.getters;
 
-import static com.example.socalbeachesforlife.BuildConfig.MAPS_API_KEY;
-
-import android.graphics.Color;
-import android.location.Location;
 import android.os.AsyncTask;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.example.socalbeachesforlife.models.Url;
+import com.example.socalbeachesforlife.parsers.RestaurantParser;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 

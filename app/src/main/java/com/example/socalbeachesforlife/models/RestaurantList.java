@@ -1,7 +1,9 @@
-package com.example.socalbeachesforlife;
+package com.example.socalbeachesforlife.models;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.example.socalbeachesforlife.R;
 
 public class RestaurantList extends AppCompatActivity {
 

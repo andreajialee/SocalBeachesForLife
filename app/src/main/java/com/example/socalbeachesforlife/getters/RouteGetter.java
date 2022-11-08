@@ -1,13 +1,13 @@
-package com.example.socalbeachesforlife;
+package com.example.socalbeachesforlife.getters;
 
-import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Build;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import androidx.annotation.RequiresApi;
+
+import com.example.socalbeachesforlife.models.Url;
+import com.example.socalbeachesforlife.parsers.RouteParser;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,6 +40,7 @@ public class RouteGetter extends AsyncTask<Object, String, String> {
         showRoutes(routeList);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void showRoutes(List<HashMap<String, String>> routeList)
     {
         HashMap<String, String> directionsGooglePlace = routeList.get(0);

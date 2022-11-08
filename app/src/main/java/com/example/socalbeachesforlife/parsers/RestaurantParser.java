@@ -1,4 +1,4 @@
-package com.example.socalbeachesforlife;
+package com.example.socalbeachesforlife.parsers;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,34 +8,34 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DataParser {
+public class RestaurantParser {
     private HashMap<String, String> getPlace(JSONObject googlePlaceJson)
     {
         HashMap<String, String> googlePlaceMap = new HashMap<>();
-        String placeName = "--NA--";
-        String vicinity = "--NA--";
         String latitude = "";
         String longitude = "";
-        String reference = "";
+        String name = "";
+        String open = "--NA--";
+        String rating = "--NA--";
 
         try {
-            if(!googlePlaceJson.isNull("name")) {
-                placeName = googlePlaceJson.getString("name");
-            }
-            if(!googlePlaceJson.isNull("vicinity")) {
-                vicinity = googlePlaceJson.getString("vicinity");
-            }
-
             latitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lat");
             longitude = googlePlaceJson.getJSONObject("geometry").getJSONObject("location").getString("lng");
 
-            reference = googlePlaceJson.getString("reference");
+            if(!googlePlaceJson.isNull("rating")) {
+                rating = googlePlaceJson.getString("rating");
+            }
+            if(!googlePlaceJson.isNull("opening_hours") && !googlePlaceJson.getJSONObject("opening_hours").isNull("open_now")) {
+                open = googlePlaceJson.getJSONObject("opening_hours").getString("open_now");
+            }
 
-            googlePlaceMap.put("place_name", placeName);
-            googlePlaceMap.put("vicinity", vicinity);
+            name = googlePlaceJson.getString("name");
+
             googlePlaceMap.put("lat", latitude);
             googlePlaceMap.put("lng", longitude);
-            googlePlaceMap.put("reference", reference);
+            googlePlaceMap.put("name", name);
+            googlePlaceMap.put("open", open);
+            googlePlaceMap.put("rating", rating);
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -1,12 +1,12 @@
-package com.example.socalbeachesforlife;
+package com.example.socalbeachesforlife.activities;
 
 import static com.example.socalbeachesforlife.BuildConfig.MAPS_API_KEY;
-import static com.google.android.libraries.places.api.model.Place.*;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -18,19 +18,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.common.api.ApiException;
+import com.example.socalbeachesforlife.BuildConfig;
+import com.example.socalbeachesforlife.getters.NearbyBeaches;
+import com.example.socalbeachesforlife.getters.ParkingLots;
+import com.example.socalbeachesforlife.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -39,20 +42,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.model.AutocompletePrediction;
-import com.google.android.libraries.places.api.model.AutocompleteSessionToken;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.model.RectangularBounds;
-import com.google.android.libraries.places.api.model.TypeFilter;
-import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
-import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
 import com.google.android.libraries.places.api.net.PlacesClient;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * An activity that displays a map showing the place at the device's current location.
@@ -214,6 +204,7 @@ public class MapsActivity extends AppCompatActivity
             if (locationPermissionGranted) {
                 @SuppressLint("MissingPermission") Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
                 locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
@@ -223,18 +214,18 @@ public class MapsActivity extends AppCompatActivity
                                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                         new LatLng(lastKnownLocation.getLatitude(),
                                                 lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                            }
-                            latitude = lastKnownLocation.getLatitude();
-                            longitude = lastKnownLocation.getLongitude();
-                            Object dataTransfer[] = new Object[2];
-                            NearbyBeaches nearbyBeaches = new NearbyBeaches();
-                            String beach = "beach";
-                            String url = getUrl(latitude, longitude, beach, 100000, true);
-                            dataTransfer[0] = map;
-                            dataTransfer[1] = url;
+                                latitude = lastKnownLocation.getLatitude();
+                                longitude = lastKnownLocation.getLongitude();
+                                Object dataTransfer[] = new Object[2];
+                                NearbyBeaches nearbyBeaches = new NearbyBeaches();
+                                String beach = "beach";
+                                String url = getUrl(latitude, longitude, beach, 100000, true);
+                                dataTransfer[0] = map;
+                                dataTransfer[1] = url;
 
-                            nearbyBeaches.execute(dataTransfer);
-                            Toast.makeText(MapsActivity.this, "Showing Nearby Beaches", Toast.LENGTH_LONG).show();
+                                nearbyBeaches.execute(dataTransfer);
+                                Toast.makeText(MapsActivity.this, "Showing Nearby Beaches", Toast.LENGTH_LONG).show();
+                            }
                         } else {
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());

@@ -1,4 +1,4 @@
-package com.example.socalbeachesforlife;
+package com.example.socalbeachesforlife.parsers;
 
 import org.json.JSONArray;
 import org.json.JSONException;

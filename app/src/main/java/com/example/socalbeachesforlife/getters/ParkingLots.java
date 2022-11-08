@@ -1,11 +1,12 @@
-package com.example.socalbeachesforlife;
+package com.example.socalbeachesforlife.getters;
 
 import static com.example.socalbeachesforlife.BuildConfig.MAPS_API_KEY;
 
-import android.location.Location;
 import android.os.AsyncTask;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
+import com.example.socalbeachesforlife.models.Url;
+import com.example.socalbeachesforlife.parsers.DataParser;
+import com.example.socalbeachesforlife.activities.MapsActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;

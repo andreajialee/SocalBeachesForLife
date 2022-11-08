@@ -1,4 +1,4 @@
-package com.example.socalbeachesforlife;
+package com.example.socalbeachesforlife.getters;
 
 import static com.example.socalbeachesforlife.BuildConfig.MAPS_API_KEY;
 
@@ -6,11 +6,12 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
-import com.google.android.gms.common.util.ArrayUtils;
+import com.example.socalbeachesforlife.models.Url;
+import com.example.socalbeachesforlife.parsers.DataParser;
+import com.example.socalbeachesforlife.activities.MapsActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -20,12 +21,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
-import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
 
 @RequiresApi(api = Build.VERSION_CODES.O)
 public class NearbyBeaches extends AsyncTask<Object, String, String> {
