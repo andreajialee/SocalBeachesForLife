@@ -102,6 +102,9 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
         MapsActivity.likelyPlaceNames = likelyPlaceNames;
         MapsActivity.likelyPlaceLatLngs = likelyPlaceLatLngs;
         for (int i = 0; i < 5; i++) {
+            if(likelyPlaceLatLngs[i] == null) {
+                continue;
+            }
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(likelyPlaceLatLngs[i]);
             markerOptions.title(likelyPlaceNames[i]);

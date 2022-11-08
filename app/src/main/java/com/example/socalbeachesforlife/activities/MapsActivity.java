@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationManager;
 import android.location.LocationRequest;
 import android.os.Build;
 import android.os.Bundle;
@@ -115,8 +116,10 @@ public class MapsActivity extends AppCompatActivity
         mapFragment.getMapAsync(this);
 
         // Set Default Location
-        lastKnownLocation.setLatitude(34.024805);
-        lastKnownLocation.setLongitude(-118.285404);
+        Location location = new Location(LocationManager.GPS_PROVIDER);
+        location.setLatitude(34.024805);
+        location.setLongitude(-118.285404);
+        lastKnownLocation = location;
     }
 
     /**
@@ -218,6 +221,8 @@ public class MapsActivity extends AppCompatActivity
                             if(tempLastKnownLocation != null) {
                                 lastKnownLocation = tempLastKnownLocation;
                             }
+                            latitude = lastKnownLocation.getLatitude();
+                            longitude = lastKnownLocation.getLongitude();
                             map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(latitude,longitude), DEFAULT_ZOOM));
                             Object dataTransfer[] = new Object[2];
