@@ -1,11 +1,13 @@
 package com.example.socalbeachesforlife.activities;
 
 import static com.example.socalbeachesforlife.BuildConfig.MAPS_API_KEY;
+import static com.google.android.gms.location.Priority.*;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.location.LocationRequest;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -62,17 +64,14 @@ public class MapsActivity extends AppCompatActivity
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
 
-    // A default location (Sydney, Australia) and default zoom to use when location permission is
-    // not granted.
-    private final LatLng defaultLocation = new LatLng(-33.8523341, 151.2106085);
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean locationPermissionGranted;
 
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
-    private static Location lastKnownLocation;
-
+    private static Location lastKnownLocation = new Location("");
+    private static LatLng defaultLocation = new LatLng(34.024805, -118.285404);
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
@@ -114,6 +113,10 @@ public class MapsActivity extends AppCompatActivity
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // Set Default Location
+        lastKnownLocation.setLatitude(34.024805);
+        lastKnownLocation.setLongitude(-118.285404);
     }
 
     /**
@@ -209,24 +212,24 @@ public class MapsActivity extends AppCompatActivity
                     public void onComplete(@NonNull Task<Location> task) {
                         if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
-                            lastKnownLocation = task.getResult();
-                            if (lastKnownLocation != null) {
-                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                        new LatLng(lastKnownLocation.getLatitude(),
-                                                lastKnownLocation.getLongitude()), DEFAULT_ZOOM));
-                                latitude = lastKnownLocation.getLatitude();
-                                longitude = lastKnownLocation.getLongitude();
-                                Object dataTransfer[] = new Object[2];
-                                NearbyBeaches nearbyBeaches = new NearbyBeaches();
-                                String beach = "beach";
-                                String url = getUrl(latitude, longitude, beach, 100000, true);
-                                dataTransfer[0] = map;
-                                dataTransfer[1] = url;
-
-                                nearbyBeaches.execute(dataTransfer);
-                                Toast.makeText(MapsActivity.this, "Showing Nearby Beaches", Toast.LENGTH_LONG).show();
+                            Location tempLastKnownLocation = task.getResult();
+                            // If it is not null, we set lastKnownLocation to current location
+                            // Else, we leave it at our current default location
+                            if(tempLastKnownLocation != null) {
+                                lastKnownLocation = tempLastKnownLocation;
                             }
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                    new LatLng(latitude,longitude), DEFAULT_ZOOM));
+                            Object dataTransfer[] = new Object[2];
+                            NearbyBeaches nearbyBeaches = new NearbyBeaches();
+                            String beach = "beach";
+                            String url = getUrl(latitude, longitude, beach, 100000, true);
+                            dataTransfer[0] = map;
+                            dataTransfer[1] = url;
+                            nearbyBeaches.execute(dataTransfer);
+                            Toast.makeText(MapsActivity.this, "Showing Nearby Beaches", Toast.LENGTH_LONG).show();
                         } else {
+                            System.out.println("Here!");
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
                             map.moveCamera(CameraUpdateFactory
@@ -236,6 +239,7 @@ public class MapsActivity extends AppCompatActivity
                     }
                 });
             }
+
         } catch (SecurityException e)  {
             Log.e("Exception: %s", e.getMessage(), e);
         }
@@ -259,7 +263,9 @@ public class MapsActivity extends AppCompatActivity
                     new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
+
     }
+
 
     /**
      * Handles the result of the request for location permissions.
@@ -304,21 +310,16 @@ public class MapsActivity extends AppCompatActivity
         if (map == null) {
             return;
         }
-
         if (locationPermissionGranted) {
-
             MapsActivity.this.openPlacesDialog();
-
         } else {
             // The user has not granted permission.
             Log.i(TAG, "The user did not grant location permission.");
-
             // Add a default marker, because the user hasn't selected a place.
             map.addMarker(new MarkerOptions()
                     .title(getString(R.string.default_info_title))
                     .position(defaultLocation)
                     .snippet(getString(R.string.default_info_snippet)));
-
             // Prompt the user for permission.
             getLocationPermission();
         }
@@ -358,6 +359,7 @@ public class MapsActivity extends AppCompatActivity
                 .setItems(likelyPlaceNames, listener)
                 .show();
     }
+
 
     /**
      * Updates the map's UI settings based on whether the user has granted location permission.
