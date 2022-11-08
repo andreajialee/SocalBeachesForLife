@@ -13,7 +13,7 @@ import com.example.socalbeachesforlife.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class Profile extends AppCompatActivity implements View.OnClickListener{
-    private TextView add_reviews, manage_reviews, logout, saved_routes;
+    private TextView add_reviews, manage_reviews, logout, saved_routes, find_beach;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +29,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener{
         manage_reviews = (Button) findViewById(R.id.manage_review);
         manage_reviews.setOnClickListener(this);
 
+        find_beach = (Button) findViewById(R.id.find_beaches);
+        find_beach.setOnClickListener(this);
+
         logout = (Button) findViewById(R.id.logout);
         logout.setOnClickListener(this);
 
@@ -43,6 +46,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener{
                 startActivity(new Intent(this, AddReview.class));
                 break;
             case R.id.manage_review:
+                break;
+            case R.id.find_beaches:
+                startActivity(new Intent(this, MapsActivity.class));
                 break;
             case R.id.logout:
                 FirebaseAuth.getInstance().signOut();
