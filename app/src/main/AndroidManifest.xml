@@ -45,6 +45,14 @@
             android:exported="false"
             android:label="@string/title_activity_maps" />
         <activity
+            android:name=".activities.AddReview"
+            android:exported="false"
+            android:label="@string/AddReview" />
+        <activity
+            android:name=".activities.Profile"
+            android:exported="false"
+            android:label="@string/profile" />
+        <activity
             android:name=".activities.RegisterUser"
             android:exported="false" />
         <activity
