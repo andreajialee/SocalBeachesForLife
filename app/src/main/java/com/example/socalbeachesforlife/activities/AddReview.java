@@ -118,7 +118,7 @@ public class AddReview extends AppCompatActivity implements View.OnClickListener
 
         if (imageURI != null) {
             storage = FirebaseStorage.getInstance();
-            StorageReference ref = storage.getReference().child("images/" + id);
+            StorageReference ref = storage.getReference().child(id);
             ref.putFile(imageURI).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {

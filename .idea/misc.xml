@@ -4,8 +4,10 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="app/src/main/res/layout/activity_add_review.xml" value="0.22146739130434784" />
+        <entry key="app/src/main/res/layout/activity_delete_review.xml" value="0.21331521739130435" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.22146739130434784" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_manage_reviews.xml" value="0.2628992628992629" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.22146739130434784" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.22146739130434784" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.1" />

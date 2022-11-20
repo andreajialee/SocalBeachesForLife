@@ -46,6 +46,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener{
                 startActivity(new Intent(this, AddReview.class));
                 break;
             case R.id.manage_review:
+                startActivity(new Intent(this, ManageReview.class));
                 break;
             case R.id.find_beaches:
                 startActivity(new Intent(this, MapsActivity.class));
