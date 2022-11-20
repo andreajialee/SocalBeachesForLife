@@ -49,6 +49,14 @@
             android:exported="false"
             android:label="@string/AddReview" />
         <activity
+            android:name=".activities.DeleteReview"
+            android:exported="false"
+            android:label="@string/DeleteReview" />
+        <activity
+            android:name=".activities.ManageReview"
+            android:exported="false"
+            android:label="@string/ManageReview" />
+        <activity
             android:name=".activities.Profile"
             android:exported="false"
             android:label="@string/profile" />
