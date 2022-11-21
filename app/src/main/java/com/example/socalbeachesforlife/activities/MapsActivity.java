@@ -5,6 +5,7 @@ import static com.google.android.gms.location.Priority.*;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
@@ -48,6 +49,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.net.PlacesClient;
 
+import java.util.Map;
+
 /**
  * An activity that displays a map showing the place at the device's current location.
  */
@@ -84,6 +87,7 @@ public class MapsActivity extends AppCompatActivity
 
     private int REST_RADIUS = 1000;
     private Button mRadius;
+    private Button mProfile;
     private final String[] radi = new String[]{"1000", "2000", "3000"};
 
     public static Location getCurrLoc() {
@@ -120,6 +124,14 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 showRadi();
+            }
+        });
+
+        mProfile = (Button) findViewById(R.id.profile_button);
+        mProfile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity (new Intent(MapsActivity.this, Profile.class));
             }
         });
         // Build the map.

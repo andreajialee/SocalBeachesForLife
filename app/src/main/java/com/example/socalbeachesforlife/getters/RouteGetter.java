@@ -32,6 +32,7 @@ public class RouteGetter extends AsyncTask<Object, String, String> {
         return googleRoutesData;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onPostExecute(String s) {
         List<HashMap<String, String>> routeList;

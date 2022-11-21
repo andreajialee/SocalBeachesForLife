@@ -64,6 +64,9 @@
             android:name=".activities.RegisterUser"
             android:exported="false" />
         <activity
+            android:name=".activities.ReviewMenu"
+            android:exported="false" />
+        <activity
             android:name=".activities.MainActivity"
             android:exported="true" >
             <intent-filter>
