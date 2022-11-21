@@ -76,6 +76,7 @@ public class MapsActivity extends AppCompatActivity
     // The geographical location where the device is currently located. That is, the last-known
     // location retrieved by the Fused Location Provider.
     private static Location lastKnownLocation = new Location("");
+    private static Location chosenBeachLocation = new Location("");
     private static LatLng defaultLocation = new LatLng(34.024805, -118.285404);
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
@@ -93,6 +94,8 @@ public class MapsActivity extends AppCompatActivity
     public static Location getCurrLoc() {
         return lastKnownLocation;
     }
+
+    public static Location getCurrBeach() { return chosenBeachLocation; }
 
     public static LatLng getCurrBeachLoc() {
         LatLng latLng = new LatLng(blatitude, blongitude);
@@ -151,6 +154,12 @@ public class MapsActivity extends AppCompatActivity
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                // Stores the user's picked beach
+                Location beachLoc = new Location(LocationManager.GPS_PROVIDER);
+                LatLng beachLatLng = likelyPlaceLatLngs[which];
+                beachLoc.setLatitude(beachLatLng.latitude);
+                beachLoc.setLongitude(beachLatLng.longitude);
+                chosenBeachLocation = beachLoc;
                 // The "which" argument contains the position of the selected item.
                 String radius = radi[which];
                 // Update Radius
@@ -220,7 +229,6 @@ public class MapsActivity extends AppCompatActivity
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.
         this.map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
-
             @Override
             // Return null here, so that getInfoContents() is called next.
             public View getInfoWindow(Marker arg0) {
@@ -286,7 +294,6 @@ public class MapsActivity extends AppCompatActivity
                             nearbyBeaches.execute(dataTransfer);
                             Toast.makeText(MapsActivity.this, "Showing Nearby Beaches", Toast.LENGTH_LONG).show();
                         } else {
-                            System.out.println("Here!");
                             Log.d(TAG, "Current location is null. Using defaults.");
                             Log.e(TAG, "Exception: %s", task.getException());
                             map.moveCamera(CameraUpdateFactory
@@ -322,7 +329,6 @@ public class MapsActivity extends AppCompatActivity
         }
 
     }
-
 
     /**
      * Handles the result of the request for location permissions.

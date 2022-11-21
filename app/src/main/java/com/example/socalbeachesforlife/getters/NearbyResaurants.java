@@ -1,7 +1,11 @@
 package com.example.socalbeachesforlife.getters;
 
+import static com.example.socalbeachesforlife.BuildConfig.MAPS_API_KEY;
+
+import android.location.Location;
 import android.os.AsyncTask;
 
+import com.example.socalbeachesforlife.activities.MapsActivity;
 import com.example.socalbeachesforlife.models.Url;
 import com.example.socalbeachesforlife.parsers.RestaurantParser;
 import com.google.android.gms.maps.GoogleMap;
@@ -71,9 +75,20 @@ public class NearbyResaurants extends AsyncTask<Object, String, String> {
         for (int i = 0; i < nearbyPlaceList.size() && i < 5; i++) {
             MarkerOptions markerOptions = new MarkerOptions();
             markerOptions.position(likelyPlaceLatLngs[i]);
-            markerOptions.title(likelyPlaceNames[i] + " : " + likelyPlaceInfo[i]);
+            markerOptions.title(likelyPlaceNames[i]);
+            markerOptions.snippet(likelyPlaceInfo[i]);
             markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
             mMap.addMarker(markerOptions);
         }
+    }
+
+    private String getUrl(double olatitude, double olongitude, double lat, double lng)
+    {
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
+        googlePlaceUrl.append("origin="+olatitude+","+olongitude);
+        googlePlaceUrl.append("&destination="+lat+","+lng);
+        googlePlaceUrl.append("&key="+MAPS_API_KEY);
+
+        return googlePlaceUrl.toString();
     }
 }
