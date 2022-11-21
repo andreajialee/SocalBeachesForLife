@@ -76,11 +76,9 @@ public class ManageReview extends AppCompatActivity{
                             i.putExtra("bname", item);
                             startActivity(i);
                         }
-
                     });
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 System.out.println("The read failed: " + error.getMessage());

@@ -107,7 +107,6 @@ public class DeleteReview extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-
     public void deleteReview(){
         FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
         DatabaseReference ref = rootNode.getReference("Users").child(mAuth.getCurrentUser().getUid());
@@ -122,7 +121,6 @@ public class DeleteReview extends AppCompatActivity implements View.OnClickListe
                     String bname = (String) postSnapshot.child("beachName").getValue();
                     if(extras != null) {
                         String name = extras.getString("bname");
-
                         if (bname.equals(name)) {
                            postSnapshot.getRef().removeValue();
                             Toast.makeText(DeleteReview.this, "Deleted review!", Toast.LENGTH_SHORT).show();
@@ -137,13 +135,10 @@ public class DeleteReview extends AppCompatActivity implements View.OnClickListe
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 System.out.println("The read failed: " + error.getMessage());
             }
         });
-
-
     }
 }

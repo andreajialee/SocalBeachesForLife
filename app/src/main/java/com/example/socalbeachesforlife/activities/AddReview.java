@@ -42,7 +42,6 @@ public class AddReview extends AppCompatActivity implements View.OnClickListener
     private FirebaseStorage storage;
     private FirebaseAuth mAuth;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +63,6 @@ public class AddReview extends AppCompatActivity implements View.OnClickListener
         anon.setOnClickListener(this);
 
         mAuth = FirebaseAuth.getInstance();
-
     }
 
     @Override
