@@ -28,7 +28,6 @@ import androidx.test.espresso.matcher.RootMatchers;
 import androidx.test.ext.junit.rules.ActivityScenarioRule;
 
 import com.example.socalbeachesforlife.activities.MainActivity;
-import com.example.socalbeachesforlife.activities.MapsActivity;
 
 import org.hamcrest.Matchers;
 import org.junit.After;

@@ -154,7 +154,7 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
         googlePlaceUrl.append("&radius="+radius);
         googlePlaceUrl.append("&type=restaurant");
         googlePlaceUrl.append("&key="+MAPS_API_KEY);
-
+        System.out.println(googlePlaceUrl.toString());
         return googlePlaceUrl.toString();
     }
 }

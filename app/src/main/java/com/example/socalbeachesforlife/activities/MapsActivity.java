@@ -47,7 +47,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import com.google.android.libraries.places.api.Places;
-import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.Map;
 
@@ -62,9 +61,6 @@ public class MapsActivity extends AppCompatActivity
     private CameraPosition cameraPosition;
     private static double latitude, longitude;
     private static double blatitude, blongitude;
-
-    // The entry point to the Places API.
-    private PlacesClient placesClient;
 
     // The entry point to the Fused Location Provider.
     private FusedLocationProviderClient fusedLocationProviderClient;
@@ -114,10 +110,6 @@ public class MapsActivity extends AppCompatActivity
 
         // Retrieve the content view that renders the map.
         setContentView(R.layout.activity_maps);
-
-        // Construct a PlacesClient
-        Places.initialize(getApplicationContext(), BuildConfig.MAPS_API_KEY);
-        placesClient = Places.createClient(this);
 
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
@@ -350,7 +342,7 @@ public class MapsActivity extends AppCompatActivity
         updateLocationUI();
     }
 
-    private String getUrl(double latitude, double longitude, String nearbyPlace, int radius, boolean feature)
+    public static String getUrl(double latitude, double longitude, String nearbyPlace, int radius, boolean feature)
     {
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlaceUrl.append("location="+latitude+","+longitude);

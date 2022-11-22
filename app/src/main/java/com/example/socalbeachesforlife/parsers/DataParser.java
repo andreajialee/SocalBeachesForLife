@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DataParser {
-    private HashMap<String, String> getPlace(JSONObject googlePlaceJson)
+    public HashMap<String, String> getPlace(JSONObject googlePlaceJson)
     {
         HashMap<String, String> googlePlaceMap = new HashMap<>();
         String placeName = "--NA--";
@@ -44,7 +44,7 @@ public class DataParser {
         return googlePlaceMap;
     }
 
-    private List<HashMap<String, String>> getPlaces(JSONArray jsonArray)
+    public List<HashMap<String, String>> getPlaces(JSONArray jsonArray)
     {
         int count = jsonArray.length();
         List<HashMap<String, String>> placelist = new ArrayList<>();
