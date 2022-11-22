@@ -93,7 +93,7 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
                 double temp = 0;
                 int k = 0;
                 for (int j = 0; j < 5; j++) {
-                    if (likelyPlaceETA[j] < temp) {
+                    if (likelyPlaceETA[j] > temp) {
                         temp = likelyPlaceETA[j];
                         k = j;
                     }
