@@ -107,13 +107,12 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
         }
 
         progressBar.setVisibility(View.VISIBLE);
-        System.out.println("Here!");
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
-                            System.out.println("Created User with Email & Pass");
+                            editTextVerifyPassword.setError("Successful Registration");
                             User user = new User(fullName, email);
                             FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
@@ -133,6 +132,7 @@ public class RegisterUser extends AppCompatActivity implements View.OnClickListe
                                     });
                         }
                         else {
+                            editTextVerifyPassword.setError("Failed to register. Try Again.");
                             Toast.makeText(RegisterUser.this, "Failed to register. Try Again.", Toast.LENGTH_LONG).show();
                             progressBar.setVisibility(View.GONE);
                             System.out.println(task.getException().getMessage());
