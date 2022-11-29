@@ -239,7 +239,7 @@ public class MapsActivity extends AppCompatActivity
         else if(tag == 2) {
             uri = "https://www.google.com/maps/dir/?api=1&origin=" + beachLat + ","+ beachLon +
                     "&destination=" + lat + "," + lon +
-                    "&travelmode=walking&dir_action=navigate";
+                    "&travelmode=walking";
         }
         // If tag is 0, we know the marker is a beach
         // We create a URI to map from beach to restaurant
