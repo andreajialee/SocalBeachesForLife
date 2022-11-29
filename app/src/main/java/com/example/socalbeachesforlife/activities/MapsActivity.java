@@ -393,21 +393,29 @@ public class MapsActivity extends AppCompatActivity
     /**
      * Handles the result of the request for location permissions.
      */
+    @SuppressLint("MissingPermission")
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         locationPermissionGranted = false;
-        if (requestCode
-                == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {// If request is cancelled, the result arrays are empty.
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                locationPermissionGranted = true;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    locationPermissionGranted = true;
+                    updateLocationUI();
+                } else {
+                    locationPermissionGranted = true;
+                    map.setMyLocationEnabled(false);
+                    map.getUiSettings().setMyLocationButtonEnabled(false);
+                    lastKnownLocation = null;
+                }
             }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            break;
         }
-        updateLocationUI();
     }
 
     public static String getUrl(double latitude, double longitude, String nearbyPlace, int radius, boolean feature)
@@ -491,16 +499,14 @@ public class MapsActivity extends AppCompatActivity
         if (map == null) {
             return;
         }
-        try {
-            if (locationPermissionGranted) {
-                map.getUiSettings().setMyLocationButtonEnabled(true);
-            } else {
-                map.getUiSettings().setMyLocationButtonEnabled(false);
-                lastKnownLocation = null;
-                getLocationPermission();
-            }
-        } catch (SecurityException e)  {
-            Log.e("Exception: %s", e.getMessage());
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
+                android.Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            locationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
+                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
     }
 }
