@@ -56,5 +56,15 @@
         android:padding="8dp"
         android:text="Reviews"
         android:textColor="#ffffff" />
+    <ImageButton
+        android:id="@+id/direction_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="5dp"
+        android:src="@drawable/ic_direction_icon"
+        android:visibility="invisible"
+        />
 
 </RelativeLayout>

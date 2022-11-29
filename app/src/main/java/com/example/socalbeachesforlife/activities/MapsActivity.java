@@ -1,7 +1,6 @@
 package com.example.socalbeachesforlife.activities;
 
 import static com.example.socalbeachesforlife.BuildConfig.MAPS_API_KEY;
-import static com.google.android.gms.location.Priority.*;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -9,7 +8,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationManager;
-import android.location.LocationRequest;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -19,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +29,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.example.socalbeachesforlife.BuildConfig;
 import com.example.socalbeachesforlife.getters.NearbyBeaches;
 import com.example.socalbeachesforlife.getters.ParkingLots;
 import com.example.socalbeachesforlife.R;
@@ -46,9 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import com.google.android.libraries.places.api.Places;
-
-import java.util.Map;
+import java.util.Set;
 
 /**
  * An activity that displays a map showing the place at the device's current location.
@@ -86,6 +83,9 @@ public class MapsActivity extends AppCompatActivity
     private Button mRadius;
     private Button mProfile;
     private final String[] radi = new String[]{"1000", "2000", "3000"};
+
+    private ImageButton mDirection;
+    private int markerType = -1;
 
     public static Location getCurrLoc() {
         return lastKnownLocation;
@@ -129,6 +129,9 @@ public class MapsActivity extends AppCompatActivity
                 startActivity (new Intent(MapsActivity.this, Profile.class));
             }
         });
+
+        mDirection = (ImageButton) findViewById(R.id.direction_button);
+
         // Build the map.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -212,12 +215,60 @@ public class MapsActivity extends AppCompatActivity
     }
 
     /**
+     * This function creates a direction uri for us to launch a new map activity
+     * @param tag
+     * @param lat
+     * @param lon
+     * @return String
+     */
+    public String getDirectionUri(int tag, double lat, double lon) {
+        double curLat = lastKnownLocation.getLatitude();
+        double curLon = lastKnownLocation.getLongitude();
+        double beachLat = getCurrBeachLoc().latitude;
+        double beachLon = getCurrBeachLoc().longitude;
+        String uri = "";
+        // If tag is 1, then we know the marker is a parking lot
+        // We create a URI to map from current location to beach
+        if(tag == 1) {
+            uri = "https://www.google.com/maps/dir/?api=1&origin=" + curLat + ","+ curLon +
+                    "&destination=" + lat + "," + lon +
+                    "&travelmode=driving&dir_action=navigate";
+        }
+        // If tag is 2, then we know the marker is a restaurant
+        // We create a URI to map from beach to restaurant
+        else if(tag == 2) {
+            uri = "https://www.google.com/maps/dir/?api=1&origin=" + beachLat + ","+ beachLon +
+                    "&destination=" + lat + "," + lon +
+                    "&travelmode=walking&dir_action=navigate";
+        }
+        // If tag is 0, we know the marker is a beach
+        // We create a URI to map from beach to restaurant
+        else if(tag == 0) {
+            uri = "https://www.google.com/maps/dir/?api=1&origin=" + curLat + ","+ curLon +
+                    "&destination=" + beachLat + "," + beachLon +
+                    "&travelmode=driving&dir_action=navigate";
+        }
+        return uri;
+    }
+
+    /**
      * Manipulates the map when it's available.
      * This callback is triggered when the map is ready to be used.
      */
     @Override
     public void onMapReady(GoogleMap map) {
         this.map = map;
+
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+                // Hides the button when you click on the map
+                mDirection.setVisibility(View.INVISIBLE);
+            }
+        });
+        // Disables the auto toolbar
+        map.getUiSettings().setMapToolbarEnabled(false);
+
         // Use a custom info window adapter to handle multiple lines of text in the
         // info window contents.
         this.map.setInfoWindowAdapter(new GoogleMap.InfoWindowAdapter() {
@@ -239,6 +290,23 @@ public class MapsActivity extends AppCompatActivity
                 TextView snippet = infoWindow.findViewById(R.id.snippet);
                 snippet.setText(marker.getSnippet());
 
+                // When the user clicks a marker, we show the button to allow them to route
+                mDirection.setVisibility(View.VISIBLE);
+                mDirection.setVisibility(View.VISIBLE);
+                mDirection.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int tag = (int) marker.getTag();
+                        double lat = marker.getPosition().latitude;
+                        double lon = marker.getPosition().longitude;
+                        String uri = getDirectionUri(tag, lat, lon);
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+                        intent.setPackage("com.google.android.apps.maps");
+                        if (intent.resolveActivity(getPackageManager()) != null) {
+                            startActivity(intent);
+                        }
+                    }
+                });
                 return infoWindow;
             }
         });

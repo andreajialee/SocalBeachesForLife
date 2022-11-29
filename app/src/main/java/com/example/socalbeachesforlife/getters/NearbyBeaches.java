@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -111,11 +112,13 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
             if(likelyPlaceLatLngs[i] == null) {
                 continue;
             }
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(likelyPlaceLatLngs[i]);
-            markerOptions.title(likelyPlaceNames[i]);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
-            mMap.addMarker(markerOptions);
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(likelyPlaceLatLngs[i])
+                    .title(likelyPlaceNames[i])
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            Marker marker = mMap.addMarker(markerOptions);
+            // We set a tag of 0 to remember that this marker is a beach
+            marker.setTag(0);
             mMap.moveCamera(CameraUpdateFactory.newLatLng(likelyPlaceLatLngs[i]));
             mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {

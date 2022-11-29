@@ -11,6 +11,7 @@ import com.example.socalbeachesforlife.parsers.RestaurantParser;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -73,12 +74,14 @@ public class NearbyResaurants extends AsyncTask<Object, String, String> {
             }
         }
         for (int i = 0; i < nearbyPlaceList.size() && i < 5; i++) {
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(likelyPlaceLatLngs[i]);
-            markerOptions.title(likelyPlaceNames[i]);
-            markerOptions.snippet(likelyPlaceInfo[i]);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
-            mMap.addMarker(markerOptions);
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(likelyPlaceLatLngs[i])
+                    .title(likelyPlaceNames[i])
+                    .snippet(likelyPlaceInfo[i])
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+            Marker marker = mMap.addMarker(markerOptions);
+            // Set a tag of 2 to remember that it is a restaurant
+            marker.setTag(2);
         }
     }
 

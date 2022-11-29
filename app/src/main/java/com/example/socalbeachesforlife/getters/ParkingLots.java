@@ -10,6 +10,7 @@ import com.example.socalbeachesforlife.activities.MapsActivity;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.io.IOException;
@@ -98,11 +99,13 @@ public class ParkingLots extends AsyncTask<Object, String, String> {
         for(int i = 0; i < 2; i++) {
             if(likelyPlaceLatLngs[i] == null)
                 continue;
-            MarkerOptions markerOptions = new MarkerOptions();
-            markerOptions.position(likelyPlaceLatLngs[i]);
-            markerOptions.title(likelyPlaceNames[i]);
-            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
-            mMap.addMarker(markerOptions);
+            MarkerOptions markerOptions = new MarkerOptions()
+                    .position(likelyPlaceLatLngs[i])
+                    .title(likelyPlaceNames[i])
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
+            Marker marker = mMap.addMarker(markerOptions);
+            // We set a tag of 1 to remember that the marker is a parking lot
+            marker.setTag(1);
         }
     }
 

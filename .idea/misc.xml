@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable-anydpi/ic_direction_icon.xml" value="0.1" />
+        <entry key="app/src/main/res/drawable/ic_direction_icon.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_add_review.xml" value="0.22146739130434784" />
         <entry key="app/src/main/res/layout/activity_delete_review.xml" value="0.21331521739130435" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.22146739130434784" />
