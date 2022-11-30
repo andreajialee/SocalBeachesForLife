@@ -259,6 +259,11 @@ public class MapsActivity extends AppCompatActivity
     public void onMapReady(GoogleMap map) {
         this.map = map;
 
+        // Prompt the user for permission.
+        getLocationPermission();
+        // Turn on the My Location layer and the related control on the map.
+        updateLocationUI();
+
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
@@ -290,13 +295,19 @@ public class MapsActivity extends AppCompatActivity
                 TextView snippet = infoWindow.findViewById(R.id.snippet);
                 snippet.setText(marker.getSnippet());
 
-                // When the user clicks a marker, we show the button to allow them to route
-                mDirection.setVisibility(View.VISIBLE);
-                mDirection.setVisibility(View.VISIBLE);
+
+                // When the user clicks a restaurant or beach parking lot marker,
+                // we show the button to allow them to route or we hide the button
+                int tag = (int) marker.getTag();
+                if(tag == 0) {
+                    mDirection.setVisibility(View.INVISIBLE);
+                }
+                else {
+                    mDirection.setVisibility(View.VISIBLE);
+                }
                 mDirection.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        int tag = (int) marker.getTag();
                         double lat = marker.getPosition().latitude;
                         double lon = marker.getPosition().longitude;
                         String uri = getDirectionUri(tag, lat, lon);
@@ -310,12 +321,6 @@ public class MapsActivity extends AppCompatActivity
                 return infoWindow;
             }
         });
-        // Prompt the user for permission.
-        getLocationPermission();
-        // Turn on the My Location layer and the related control on the map.
-        updateLocationUI();
-        // Get the current location of the device and set the position of the map.
-        getDeviceLocation();
     }
 
     /**
@@ -388,34 +393,6 @@ public class MapsActivity extends AppCompatActivity
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
 
-    }
-
-    /**
-     * Handles the result of the request for location permissions.
-     */
-    @SuppressLint("MissingPermission")
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        locationPermissionGranted = false;
-        switch (requestCode) {
-            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    locationPermissionGranted = true;
-                    updateLocationUI();
-                } else {
-                    locationPermissionGranted = true;
-                    map.setMyLocationEnabled(false);
-                    map.getUiSettings().setMyLocationButtonEnabled(false);
-                    lastKnownLocation = null;
-                }
-            }
-            break;
-        }
     }
 
     public static String getUrl(double latitude, double longitude, String nearbyPlace, int radius, boolean feature)
@@ -493,20 +470,48 @@ public class MapsActivity extends AppCompatActivity
 
 
     /**
+     * Handles the result of the request for location permissions.
+     */
+    @SuppressLint("MissingPermission")
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        locationPermissionGranted = false;
+        if(requestCode == PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                locationPermissionGranted = true;
+                updateLocationUI();
+
+            } else {
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            }
+        }
+    }
+
+    /**
      * Updates the map's UI settings based on whether the user has granted location permission.
      */
+    @SuppressLint("MissingPermission")
     private void updateLocationUI() {
         if (map == null) {
             return;
         }
-        if (ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                android.Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            locationPermissionGranted = true;
-        } else {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        try {
+            if (locationPermissionGranted) {
+                map.setMyLocationEnabled(true);
+                map.getUiSettings().setMyLocationButtonEnabled(true);
+                // Get the current location of the device and set the position of the map.
+                getDeviceLocation();
+            } else {
+                map.setMyLocationEnabled(false);
+                map.getUiSettings().setMyLocationButtonEnabled(false);
+                lastKnownLocation = null;
+                getLocationPermission();
+            }
+        } catch (SecurityException e)  {
+            Log.e("Exception: %s", e.getMessage());
         }
     }
 }
