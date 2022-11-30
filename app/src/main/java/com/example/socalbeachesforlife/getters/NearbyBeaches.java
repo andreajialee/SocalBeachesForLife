@@ -82,8 +82,8 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
             Object dataTransfer[] = new Object[2];
             dataTransfer[0] = mMap;
             dataTransfer[1] = rurl;
-            RouteGetter routeGetter = new RouteGetter();
-            routeGetter.execute(dataTransfer);
+            //RouteGetter routeGetter = new RouteGetter();
+            //routeGetter.execute(dataTransfer);
 
             if (count < 5) {
                 likelyPlaceLatLngs[count] = latLng;
@@ -157,7 +157,6 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
         googlePlaceUrl.append("&radius="+radius);
         googlePlaceUrl.append("&type=restaurant");
         googlePlaceUrl.append("&key="+MAPS_API_KEY);
-        System.out.println(googlePlaceUrl.toString());
         return googlePlaceUrl.toString();
     }
 }

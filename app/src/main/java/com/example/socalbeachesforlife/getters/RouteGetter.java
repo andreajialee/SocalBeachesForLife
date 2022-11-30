@@ -46,7 +46,7 @@ public class RouteGetter extends AsyncTask<Object, String, String> {
     {
         HashMap<String, String> directionsGooglePlace = routeList.get(0);
         double ETA = Double.parseDouble(directionsGooglePlace.get("duration"));
-
+        System.out.println("ETA: " + ETA);
         NearbyBeaches.ETA = ETA;
         ParkingLots.ETA = ETA;
     }

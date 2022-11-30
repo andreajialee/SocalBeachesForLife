@@ -45,6 +45,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.Calendar;
 import java.util.Set;
 
 /**
@@ -308,6 +309,15 @@ public class MapsActivity extends AppCompatActivity
                 mDirection.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        // If the tag is a parking lot, we save the route
+                        if (tag == 1) {
+                            Calendar now = Calendar.getInstance();
+                            String startTime = now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE);
+                            System.out.println(marker.getTitle() + " " + startTime);
+                            now.add(Calendar.SECOND, 1000);
+                            String arrivalTime = now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE);
+                            System.out.println(marker.getTitle() + " " + arrivalTime);
+                        }
                         double lat = marker.getPosition().latitude;
                         double lon = marker.getPosition().longitude;
                         String uri = getDirectionUri(tag, lat, lon);
