@@ -7,6 +7,7 @@ import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
@@ -31,6 +32,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.socalbeachesforlife.getters.NearbyBeaches;
+import com.example.socalbeachesforlife.getters.NearbyResaurants;
 import com.example.socalbeachesforlife.getters.ParkingLots;
 import com.example.socalbeachesforlife.R;
 import com.example.socalbeachesforlife.getters.RouteGetter;
@@ -41,6 +43,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -93,6 +97,8 @@ public class MapsActivity extends AppCompatActivity
     private Button mProfile;
     private final String[] radi = new String[]{"1000", "2000", "3000"};
 
+    private Circle circle;
+
     private ImageButton mDirection;
     private int markerType = -1;
 
@@ -122,15 +128,7 @@ public class MapsActivity extends AppCompatActivity
 
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-
-        mRadius = (Button) findViewById(R.id.radius_button);
-        mRadius.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showRadi();
-            }
-        });
-
+        
         mProfile = (Button) findViewById(R.id.profile_button);
         mProfile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -156,18 +154,40 @@ public class MapsActivity extends AppCompatActivity
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // The "which" argument contains the position of the selected item.
-                String radius = radi[which];
+                int radius = Integer.parseInt(radi[which]);
                 // Update Radius
                 REST_RADIUS = Integer.valueOf(radius);
-                getDeviceLocation();
+                LatLng latLng = new LatLng(blatitude,blongitude);
+                // Draw circle around chosen beach
+                if(circle != null) {
+                    circle.remove();
+                }
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    circle = map.addCircle(new CircleOptions()
+                            .center(latLng)
+                            .radius(radius)
+                            .strokeColor(Color.RED)
+                            .fillColor(Color.argb(.25f, 0f, 0f, 1f)));
+                }
+
                 Object dataTransfer[] = new Object[2];
-                ParkingLots parkingLots = new ParkingLots();
-                String parking = "parking";
-                String url = getUrl(blatitude, blongitude, parking, REST_RADIUS, false);
+                NearbyResaurants nearbyResaurants = new NearbyResaurants();
+                String reurl = getRestaurantUrl(blatitude, blongitude, radius);
                 dataTransfer[0] = map;
-                dataTransfer[1] = url;
-                parkingLots.execute(dataTransfer);
-                Toast.makeText(MapsActivity.this, "Updated Radius", Toast.LENGTH_LONG).show();
+                dataTransfer[1] = reurl;
+                nearbyResaurants.execute(dataTransfer);
+
+                Object dataParkingTransfer[] = new Object[2];
+                ParkingLots parkingLots = new ParkingLots();
+                String url = getUrl(blatitude, blongitude, "parking", REST_RADIUS, false);
+                dataParkingTransfer[0] = map;
+                dataParkingTransfer[1] = url;
+                parkingLots.execute(dataParkingTransfer);
+
+                // Position the map's camera at the location of the marker.
+                map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
+
+                Toast.makeText(MapsActivity.this, "Showing " + getCurrBeachName(), Toast.LENGTH_LONG).show();
             }
         };
         // Display the dialog.
@@ -394,6 +414,7 @@ public class MapsActivity extends AppCompatActivity
                             longitude = lastKnownLocation.getLongitude();
                             map.moveCamera(CameraUpdateFactory.newLatLngZoom(
                                     new LatLng(latitude,longitude), DEFAULT_ZOOM));
+
                             Object dataTransfer[] = new Object[2];
                             NearbyBeaches nearbyBeaches = new NearbyBeaches(REST_RADIUS);
                             String beach = "beach";
@@ -437,6 +458,16 @@ public class MapsActivity extends AppCompatActivity
                     PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
 
+    }
+
+    private String getRestaurantUrl(double latitude, double longitude, int radius)
+    {
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlaceUrl.append("location="+latitude+","+longitude);
+        googlePlaceUrl.append("&radius="+radius);
+        googlePlaceUrl.append("&type=restaurant");
+        googlePlaceUrl.append("&key="+MAPS_API_KEY);
+        return googlePlaceUrl.toString();
     }
 
     public static String getUrl(double latitude, double longitude, String nearbyPlace, int radius, boolean feature)
@@ -487,23 +518,11 @@ public class MapsActivity extends AppCompatActivity
                 // The "which" argument contains the position of the selected item.
                 LatLng markerLatLng = likelyPlaceLatLngs[which];
 
-                // Position the map's camera at the location of the marker.
-                map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLatLng,
-                        DEFAULT_ZOOM));
-
                 chosenBeachName = likelyPlaceNames[which];
                 blatitude = likelyPlaceLatLngs[which].latitude;
                 blongitude = likelyPlaceLatLngs[which].longitude;
 
-                Object dataTransfer[] = new Object[2];
-                ParkingLots parkingLots = new ParkingLots();
-                String parking = "parking";
-                String url = getUrl(blatitude, blongitude, parking, REST_RADIUS, false);
-                dataTransfer[0] = map;
-                dataTransfer[1] = url;
-                parkingLots.execute(dataTransfer);
-
-                Toast.makeText(MapsActivity.this, "Showing Nearby Beaches", Toast.LENGTH_LONG).show();
+                showRadi();
             }
         };
 

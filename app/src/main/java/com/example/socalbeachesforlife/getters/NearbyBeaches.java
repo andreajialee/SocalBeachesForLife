@@ -108,6 +108,7 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
         }
         MapsActivity.likelyPlaceNames = likelyPlaceNames;
         MapsActivity.likelyPlaceLatLngs = likelyPlaceLatLngs;
+        int validBeach = 0;
         for (int i = 0; i < 5; i++) {
             if(likelyPlaceLatLngs[i] == null) {
                 continue;
@@ -119,25 +120,11 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
             Marker marker = mMap.addMarker(markerOptions);
             // We set a tag of 0 to remember that this marker is a beach
             marker.setTag(0);
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(likelyPlaceLatLngs[i]));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                circle = mMap.addCircle(new CircleOptions()
-                        .center(likelyPlaceLatLngs[i])
-                        .radius(radius)
-                        .strokeColor(Color.RED)
-                        .fillColor(Color.argb(.25f, 0f, 0f, 1f)));
-                circleDrawn = true;
-
-            }
-            Object dataTransfer[] = new Object[2];
-            NearbyResaurants nearbyResaurants = new NearbyResaurants();
-            String reurl = getRestaurantUrl(likelyPlaceLatLngs[i].latitude, likelyPlaceLatLngs[i].longitude, radius);
-            dataTransfer[0] = mMap;
-            dataTransfer[1] = reurl;
-
-            nearbyResaurants.execute(dataTransfer);
+            validBeach = i;
         }
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(likelyPlaceLatLngs[validBeach]));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
+
     }
 
     private String getUrl(double olatitude, double olongitude, double lat, double lng)
