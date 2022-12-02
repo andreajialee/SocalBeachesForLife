@@ -18,7 +18,7 @@
     <string name="AddReview">Add Review</string>
     <string name="DeleteReview">Delete Review</string>
     <string name="ManageReview">Manage Review</string>
-
+    <string name="last_trip">Last Trip</string>
 
 
 </resources>

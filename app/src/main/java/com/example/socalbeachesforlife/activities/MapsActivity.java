@@ -3,6 +3,7 @@ package com.example.socalbeachesforlife.activities;
 import static com.example.socalbeachesforlife.BuildConfig.MAPS_API_KEY;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -32,6 +33,7 @@ import androidx.core.content.ContextCompat;
 import com.example.socalbeachesforlife.getters.NearbyBeaches;
 import com.example.socalbeachesforlife.getters.ParkingLots;
 import com.example.socalbeachesforlife.R;
+import com.example.socalbeachesforlife.getters.RouteGetter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -44,15 +46,20 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
-import java.util.Set;
+import java.util.Formatter;
 
 /**
  * An activity that displays a map showing the place at the device's current location.
  */
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback {
+
+    public static double duration = 0;
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap map;
@@ -71,6 +78,7 @@ public class MapsActivity extends AppCompatActivity
     // location retrieved by the Fused Location Provider.
     private static Location lastKnownLocation = new Location("");
     private static Location chosenBeachLocation = new Location("");
+    private static String chosenBeachName = "";
     private static LatLng defaultLocation = new LatLng(34.024805, -118.285404);
     // Keys for storing activity state.
     private static final String KEY_CAMERA_POSITION = "camera_position";
@@ -92,7 +100,7 @@ public class MapsActivity extends AppCompatActivity
         return lastKnownLocation;
     }
 
-    public static Location getCurrBeach() { return chosenBeachLocation; }
+    public static String getCurrBeachName() { return chosenBeachName; }
 
     public static LatLng getCurrBeachLoc() {
         LatLng latLng = new LatLng(blatitude, blongitude);
@@ -138,11 +146,8 @@ public class MapsActivity extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // Set Default Location
-        Location location = new Location(LocationManager.GPS_PROVIDER);
-        location.setLatitude(34.024805);
-        location.setLongitude(-118.285404);
-        lastKnownLocation = location;
+        // Prompt the user for permission.
+        getLocationPermission();
     }
 
     private void showRadi() {
@@ -150,17 +155,10 @@ public class MapsActivity extends AppCompatActivity
         DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Stores the user's picked beach
-                Location beachLoc = new Location(LocationManager.GPS_PROVIDER);
-                LatLng beachLatLng = likelyPlaceLatLngs[which];
-                beachLoc.setLatitude(beachLatLng.latitude);
-                beachLoc.setLongitude(beachLatLng.longitude);
-                chosenBeachLocation = beachLoc;
                 // The "which" argument contains the position of the selected item.
                 String radius = radi[which];
                 // Update Radius
                 REST_RADIUS = Integer.valueOf(radius);
-                map.clear();
                 getDeviceLocation();
                 Object dataTransfer[] = new Object[2];
                 ParkingLots parkingLots = new ParkingLots();
@@ -260,11 +258,6 @@ public class MapsActivity extends AppCompatActivity
     public void onMapReady(GoogleMap map) {
         this.map = map;
 
-        // Prompt the user for permission.
-        getLocationPermission();
-        // Turn on the My Location layer and the related control on the map.
-        updateLocationUI();
-
         map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
@@ -300,37 +293,75 @@ public class MapsActivity extends AppCompatActivity
                 // When the user clicks a restaurant or beach parking lot marker,
                 // we show the button to allow them to route or we hide the button
                 int tag = (int) marker.getTag();
-                if(tag == 0) {
+                if(tag == 0) {                                      // If marker is beach, we do nothing
                     mDirection.setVisibility(View.INVISIBLE);
                 }
                 else {
                     mDirection.setVisibility(View.VISIBLE);
                 }
+                // Find the longitude and latitude of marker
+                double lat = marker.getPosition().latitude;
+                double lon = marker.getPosition().longitude;
+                // Find the duration of the journey to calculate ETA for parking lot
+                if(tag == 1) {
+                    LatLng latLng = marker.getPosition();
+                    String directionUrl = getDirectionUrl(getCurrLoc().getLatitude(), getCurrLoc().getLongitude(),
+                            lat, lon);
+                    String url = getDirectionUrl(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude(), lat, lon);
+                    System.out.println("URL: " + url);
+                    Object dataTransfer[] = new Object[2];
+                    dataTransfer[0] = map;
+                    dataTransfer[1] = url;
+                    RouteGetter routeGetter = new RouteGetter();
+                    routeGetter.execute(dataTransfer);
+                }
                 mDirection.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        // If the tag is a parking lot, we save the route
-                        if (tag == 1) {
-                            Calendar now = Calendar.getInstance();
-                            String startTime = now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE);
-                            System.out.println(marker.getTitle() + " " + startTime);
-                            now.add(Calendar.SECOND, 1000);
-                            String arrivalTime = now.get(Calendar.HOUR_OF_DAY) + ":" + now.get(Calendar.MINUTE);
-                            System.out.println(marker.getTitle() + " " + arrivalTime);
-                        }
-                        double lat = marker.getPosition().latitude;
-                        double lon = marker.getPosition().longitude;
                         String uri = getDirectionUri(tag, lat, lon);
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
                         intent.setPackage("com.google.android.apps.maps");
-                        if (intent.resolveActivity(getPackageManager()) != null) {
+
+                        // If the tag is a parking lot, we save the route & time
+                        if (tag == 1) {
+                            Calendar now = Calendar.getInstance();
+                            Formatter formatter1 = new Formatter();
+                            Formatter formatter2 = new Formatter();
+                            String startTime = String.valueOf(formatter1.format("%tl:%tM", now, now));
+                            now.add(Calendar.SECOND, (int)duration);
+                            String arrivalTime = String.valueOf(formatter2.format("%tl:%tM", now, now));
+                            // Store the trip's information to user database
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .child("trip");
+                            ref.child("beachName").setValue(getCurrBeachName());
+                            ref.child("duration").setValue(duration);
+                            ref.child("endTime").setValue(startTime);
+                            ref.child("startTime").setValue(arrivalTime);
+                            ref.child("url").setValue(uri);
+                        }
+                        try {
                             startActivity(intent);
+                        } catch (ActivityNotFoundException e) {
+                            Toast.makeText(MapsActivity.this,"Failed to launch map.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
                 return infoWindow;
             }
         });
+        // Turn on the My Location layer and the related control on the map.
+        updateLocationUI();
+    }
+
+    private String getDirectionUrl(double olatitude, double olongitude, double lat, double lng)
+    {
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
+        googlePlaceUrl.append("origin="+olatitude+","+olongitude);
+        googlePlaceUrl.append("&destination="+lat+","+lng);
+        googlePlaceUrl.append("&alternatives=true");
+        googlePlaceUrl.append("&key="+MAPS_API_KEY);
+        return googlePlaceUrl.toString();
     }
 
     /**
@@ -348,7 +379,10 @@ public class MapsActivity extends AppCompatActivity
                     @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public void onComplete(@NonNull Task<Location> task) {
-                        if (task.isSuccessful()) {
+                        if(task.getResult() == null) {
+                            getDeviceLocation();
+                        }
+                        else if (task.isSuccessful()) {
                             // Set the map's camera position to the current location of the device.
                             Location tempLastKnownLocation = task.getResult();
                             // If it is not null, we set lastKnownLocation to current location
@@ -457,16 +491,18 @@ public class MapsActivity extends AppCompatActivity
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(markerLatLng,
                         DEFAULT_ZOOM));
 
+                chosenBeachName = likelyPlaceNames[which];
                 blatitude = likelyPlaceLatLngs[which].latitude;
                 blongitude = likelyPlaceLatLngs[which].longitude;
+
                 Object dataTransfer[] = new Object[2];
                 ParkingLots parkingLots = new ParkingLots();
                 String parking = "parking";
                 String url = getUrl(blatitude, blongitude, parking, REST_RADIUS, false);
                 dataTransfer[0] = map;
                 dataTransfer[1] = url;
-
                 parkingLots.execute(dataTransfer);
+
                 Toast.makeText(MapsActivity.this, "Showing Nearby Beaches", Toast.LENGTH_LONG).show();
             }
         };

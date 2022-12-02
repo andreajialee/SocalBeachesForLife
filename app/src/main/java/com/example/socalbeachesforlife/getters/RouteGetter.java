@@ -5,6 +5,7 @@ import android.os.Build;
 
 import androidx.annotation.RequiresApi;
 
+import com.example.socalbeachesforlife.activities.MapsActivity;
 import com.example.socalbeachesforlife.models.Url;
 import com.example.socalbeachesforlife.parsers.RouteParser;
 import com.google.android.gms.maps.GoogleMap;
@@ -44,10 +45,13 @@ public class RouteGetter extends AsyncTask<Object, String, String> {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void showRoutes(List<HashMap<String, String>> routeList)
     {
-        HashMap<String, String> directionsGooglePlace = routeList.get(0);
-        double ETA = Double.parseDouble(directionsGooglePlace.get("duration"));
-        System.out.println("ETA: " + ETA);
+        double ETA = Double.MAX_VALUE;
+        for(int i=0; i<routeList.size(); i++) {
+            HashMap<String, String> directionsGooglePlace = routeList.get(i);
+            ETA = Math.min(Double.parseDouble(directionsGooglePlace.get("duration")), ETA);
+        }
         NearbyBeaches.ETA = ETA;
         ParkingLots.ETA = ETA;
+        MapsActivity.duration = ETA;
     }
 }
