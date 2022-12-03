@@ -68,41 +68,7 @@ public class Profile extends AppCompatActivity implements View.OnClickListener{
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.saved_route:
-                System.out.println("Saved Route");
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
-                        .child(FirebaseAuth.getInstance().getCurrentUser().getUid());
-                ref.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if(dataSnapshot.child("trip").exists()) {
-                            System.out.println("Trip exists");
-                            DatabaseReference tripInfo = ref.child("trip");
-                            tripInfo.addValueEventListener(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                    String url = (String) snapshot.child("url").getValue();
-                                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                                    intent.setPackage("com.google.android.apps.maps");
-                                    try {
-                                        startActivity(intent);
-                                    } catch (ActivityNotFoundException e) {
-                                        Toast.makeText(Profile.this,"Google Maps Intent NULL", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                                @Override
-                                public void onCancelled(@NonNull DatabaseError error) {
-                                    Log.d(TAG, error.getMessage());
-                                }
-                            });
-                        } else  {
-                            Toast.makeText(Profile.this, "There is no saved trip.", Toast.LENGTH_LONG).show();
-                        }
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.d(TAG, error.getMessage());
-                    }
-                });
+                startActivity(new Intent(this, TripInfo.class));
                 break;
             case R.id.manage_review:
                 startActivity(new Intent(this, ManageReview.class));

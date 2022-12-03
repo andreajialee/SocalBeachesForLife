@@ -49,7 +49,9 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
         Url downloadURL = new Url();
         try {
             googlePlacesData = downloadURL.readUrl(url);
-        } catch (IOException e){
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
 

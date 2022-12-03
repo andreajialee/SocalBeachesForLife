@@ -92,9 +92,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity (new Intent(MainActivity.this, MapsActivity.class));
                 }
                 else {
+                    progressBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(MainActivity.this, "Failed to login. Please check your credentials", Toast.LENGTH_LONG).show();
                     return;
                 }
+
             }
         });
     }
