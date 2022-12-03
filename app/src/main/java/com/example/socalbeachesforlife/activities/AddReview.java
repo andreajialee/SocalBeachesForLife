@@ -142,7 +142,7 @@ public class AddReview extends AppCompatActivity implements View.OnClickListener
                     // Redirect to user profile
                     Toast.makeText(AddReview.this, "Uploaded review!", Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.VISIBLE);
-                    startActivity (new Intent(AddReview.this, Profile.class));
+                    startActivity (new Intent(AddReview.this, MapsActivity.class));
                 }
                 else {
                     Toast.makeText(AddReview.this, "Failed to upload review. Please try again", Toast.LENGTH_LONG).show();

@@ -22,18 +22,36 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class Profile extends AppCompatActivity implements View.OnClickListener{
-    private TextView add_reviews, manage_reviews, logout, saved_routes, find_beach;
+    private TextView name, email, manage_reviews, logout, saved_routes, find_beach;
     private static final String TAG = "Profile.java ";
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
 
+        name = (TextView) findViewById(R.id.names);
+        email = (TextView) findViewById(R.id.emails);
+        email.setText(mAuth.getCurrentUser().getEmail());
+
+        FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
+        DatabaseReference ref = rootNode.getReference("Users").child(mAuth.getCurrentUser().getUid());
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                name.setText((String) snapshot.child("fullName").getValue() );
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+
         saved_routes = (Button) findViewById(R.id.saved_route);
         saved_routes.setOnClickListener(this);
-
-        add_reviews = (Button) findViewById(R.id.add_review);
-        add_reviews.setOnClickListener(this);
 
         manage_reviews = (Button) findViewById(R.id.manage_review);
         manage_reviews.setOnClickListener(this);
@@ -85,9 +103,6 @@ public class Profile extends AppCompatActivity implements View.OnClickListener{
                         Log.d(TAG, error.getMessage());
                     }
                 });
-                break;
-            case R.id.add_review:
-                startActivity(new Intent(this, AddReview.class));
                 break;
             case R.id.manage_review:
                 startActivity(new Intent(this, ManageReview.class));

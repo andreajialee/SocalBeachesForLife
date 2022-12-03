@@ -95,6 +95,7 @@ public class MapsActivity extends AppCompatActivity
     private int REST_RADIUS = 1000;
     private Button mRadius;
     private Button mProfile;
+    private Button mReview;
     private final String[] radi = new String[]{"1000", "2000", "3000"};
 
     private Circle circle;
@@ -128,12 +129,20 @@ public class MapsActivity extends AppCompatActivity
 
         // Construct a FusedLocationProviderClient.
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
-        
+
         mProfile = (Button) findViewById(R.id.profile_button);
         mProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity (new Intent(MapsActivity.this, Profile.class));
+            }
+        });
+
+        mReview = (Button) findViewById(R.id.reviews_button);
+        mReview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity (new Intent(MapsActivity.this, AddReview.class));
             }
         });
 
@@ -370,6 +379,19 @@ public class MapsActivity extends AppCompatActivity
                 return infoWindow;
             }
         });
+        map.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(@NonNull Marker marker) {
+                int tag = (int) marker.getTag();
+                if(tag == 0){
+                    Intent i = new Intent(MapsActivity.this, ReviewMenu.class);
+                    i.putExtra("bname", marker.getTitle());
+                    startActivity(i);
+                }
+            }
+        });
+        // Prompt the user for permission.
+        getLocationPermission();
         // Turn on the My Location layer and the related control on the map.
         updateLocationUI();
     }
