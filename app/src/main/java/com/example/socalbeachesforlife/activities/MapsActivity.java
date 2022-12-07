@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -540,6 +539,18 @@ public class MapsActivity extends AppCompatActivity
         googlePlaceUrl.append("&radius="+radius);
         googlePlaceUrl.append("&name="+nearbyPlace);
         googlePlaceUrl.append("&type=lodging");
+        googlePlaceUrl.append("&sensor=true");
+        googlePlaceUrl.append("&key="+MAPS_API_KEY);
+        return googlePlaceUrl.toString();
+    }
+
+    public static String getRestroomUrl(double latitude, double longitude, int radius)
+    {
+        String nearbyPlace = "restroom";
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlaceUrl.append("location="+latitude+","+longitude);
+        googlePlaceUrl.append("&radius="+radius);
+        googlePlaceUrl.append("&name="+nearbyPlace);
         googlePlaceUrl.append("&sensor=true");
         googlePlaceUrl.append("&key="+MAPS_API_KEY);
         return googlePlaceUrl.toString();

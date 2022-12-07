@@ -65,14 +65,6 @@ public class ParkingLots extends AsyncTask<Object, String, String> {
             double olatitude = oLocation.latitude;
             double olongitude = oLocation.longitude;
 
-            List<HashMap<String, String>> directionsNearbyPlaceList;
-            String rurl = getUrl(olatitude, olongitude, lat, lng);
-            Object dataTransfer[] = new Object[2];
-            dataTransfer[0] = mMap;
-            dataTransfer[1] = rurl;
-            // RouteGetter routeGetter = new RouteGetter();
-            // routeGetter.execute(dataTransfer);
-
             if(count < 2) {
                 likelyPlaceLatLngs[count] = latLng;
                 likelyPlaceNames[count] = placeName;
@@ -107,15 +99,5 @@ public class ParkingLots extends AsyncTask<Object, String, String> {
             // We set a tag of 1 to remember that the marker is a parking lot
             marker.setTag(1);
         }
-    }
-
-    private String getUrl(double olatitude, double olongitude, double lat, double lng)
-    {
-        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
-        googlePlaceUrl.append("origin="+olatitude+","+olongitude);
-        googlePlaceUrl.append("&destination="+lat+","+lng);
-        googlePlaceUrl.append("&key="+MAPS_API_KEY);
-
-        return googlePlaceUrl.toString();
     }
 }

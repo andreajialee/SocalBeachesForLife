@@ -24,6 +24,9 @@
     <string name="end_time">End Time</string>
     <string name="hotel_name">Hotel Name</string>
     <string name="route_to_hotel">Route to Hotel</string>
+    <string name="route_to_lodging">Route to Lodging</string>
+    <string name="lodging_name">Lodging Name</string>
+    <string name="lodging_information">Lodging Information</string>
 
 
 </resources>
