@@ -33,6 +33,7 @@ import androidx.core.content.ContextCompat;
 import com.example.socalbeachesforlife.getters.NearbyBeaches;
 import com.example.socalbeachesforlife.getters.NearbyLodging;
 import com.example.socalbeachesforlife.getters.NearbyResaurants;
+import com.example.socalbeachesforlife.getters.NearbyRestrooms;
 import com.example.socalbeachesforlife.getters.ParkingLots;
 import com.example.socalbeachesforlife.R;
 import com.example.socalbeachesforlife.getters.RouteGetter;
@@ -200,6 +201,13 @@ public class MapsActivity extends AppCompatActivity
                 dataLodgingTransfer[1] = hotelUrl;
                 nearbyLodging.execute(dataLodgingTransfer);
 
+                Object dataRestroomTransfer[] = new Object[2];
+                NearbyRestrooms nearbyRestrooms = new NearbyRestrooms();
+                String restroomUrl = getRestroomUrl(blatitude, blongitude, REST_RADIUS);
+                dataRestroomTransfer[0] = map;
+                dataRestroomTransfer[1] = restroomUrl;
+                nearbyRestrooms.execute(dataRestroomTransfer);
+
                 // Position the map's camera at the location of the marker.
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
 
@@ -264,24 +272,17 @@ public class MapsActivity extends AppCompatActivity
         String uri = "";
         // If tag is 1, then we know the marker is a parking lot
         // We create a URI to map from current location to beach
-        if(tag == 1) {
+        if(tag == 1 || tag == 3) {
             uri = "https://www.google.com/maps/dir/?api=1&origin=" + curLat + ","+ curLon +
                     "&destination=" + lat + "," + lon +
                     "&travelmode=driving&dir_action=navigate";
         }
         // If tag is 2, then we know the marker is a restaurant
         // We create a URI to map from beach to restaurant
-        else if(tag == 2) {
+        else if(tag == 2 || tag == 4) {
             uri = "https://www.google.com/maps/dir/?api=1&origin=" + beachLat + ","+ beachLon +
                     "&destination=" + lat + "," + lon +
                     "&travelmode=walking";
-        }
-        // If tag is 3, then we know the marker is a hotel
-        // We create a URI to map from current location to hotel
-        if(tag == 3) {
-            uri = "https://www.google.com/maps/dir/?api=1&origin=" + curLat + ","+ curLon +
-                    "&destination=" + lat + "," + lon +
-                    "&travelmode=driving&dir_action=navigate";
         }
         // If tag is 0, we know the marker is a beach
         // We create a URI to map from beach to restaurant
@@ -546,11 +547,11 @@ public class MapsActivity extends AppCompatActivity
 
     public static String getRestroomUrl(double latitude, double longitude, int radius)
     {
-        String nearbyPlace = "restroom";
+        String keyWord = "restroom";
         StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
         googlePlaceUrl.append("location="+latitude+","+longitude);
         googlePlaceUrl.append("&radius="+radius);
-        googlePlaceUrl.append("&name="+nearbyPlace);
+        googlePlaceUrl.append("&keyword="+keyWord);
         googlePlaceUrl.append("&sensor=true");
         googlePlaceUrl.append("&key="+MAPS_API_KEY);
         return googlePlaceUrl.toString();
