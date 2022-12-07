@@ -32,6 +32,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.socalbeachesforlife.getters.NearbyBeaches;
+import com.example.socalbeachesforlife.getters.NearbyLodging;
 import com.example.socalbeachesforlife.getters.NearbyResaurants;
 import com.example.socalbeachesforlife.getters.ParkingLots;
 import com.example.socalbeachesforlife.R;
@@ -63,7 +64,7 @@ import java.util.Formatter;
 public class MapsActivity extends AppCompatActivity
         implements OnMapReadyCallback {
 
-    public static double duration = 0;
+    public static int duration = 0;
 
     private static final String TAG = MapsActivity.class.getSimpleName();
     private GoogleMap map;
@@ -193,6 +194,13 @@ public class MapsActivity extends AppCompatActivity
                 dataParkingTransfer[1] = url;
                 parkingLots.execute(dataParkingTransfer);
 
+                Object dataLodgingTransfer[] = new Object[2];
+                NearbyLodging nearbyLodging = new NearbyLodging();
+                String hotelUrl = getLodgingUrl(blatitude, blongitude, "", REST_RADIUS);
+                dataLodgingTransfer[0] = map;
+                dataLodgingTransfer[1] = hotelUrl;
+                nearbyLodging.execute(dataLodgingTransfer);
+
                 // Position the map's camera at the location of the marker.
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
 
@@ -268,6 +276,13 @@ public class MapsActivity extends AppCompatActivity
             uri = "https://www.google.com/maps/dir/?api=1&origin=" + beachLat + ","+ beachLon +
                     "&destination=" + lat + "," + lon +
                     "&travelmode=walking";
+        }
+        // If tag is 3, then we know the marker is a hotel
+        // We create a URI to map from current location to hotel
+        if(tag == 3) {
+            uri = "https://www.google.com/maps/dir/?api=1&origin=" + curLat + ","+ curLon +
+                    "&destination=" + lat + "," + lon +
+                    "&travelmode=driving&dir_action=navigate";
         }
         // If tag is 0, we know the marker is a beach
         // We create a URI to map from beach to restaurant
@@ -357,16 +372,27 @@ public class MapsActivity extends AppCompatActivity
                             Formatter formatter1 = new Formatter();
                             Formatter formatter2 = new Formatter();
                             String startTime = String.valueOf(formatter1.format("%tl:%tM", now, now));
-                            now.add(Calendar.SECOND, (int)duration);
-                            String arrivalTime = String.valueOf(formatter2.format("%tl:%tM", now, now));
+                            now.add(Calendar.MINUTE, (int)duration);
+                            String endTime = String.valueOf(formatter2.format("%tl:%tM", now, now));
                             // Store the trip's information to user database
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
                                     .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
                                     .child("trip");
                             ref.child("beachName").setValue(getCurrBeachName());
                             ref.child("duration").setValue(duration);
-                            ref.child("endTime").setValue(startTime);
-                            ref.child("startTime").setValue(arrivalTime);
+                            ref.child("endTime").setValue(endTime);
+                            ref.child("startTime").setValue(startTime);
+                            ref.child("url").setValue(uri);
+                        }
+                        // If the tag is a hotel, we save the name & info
+                        else if (tag == 3) {
+                            // Store the trip's information to user database
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users")
+                                    .child(FirebaseAuth.getInstance().getCurrentUser().getUid())
+                                    .child("hotel");
+                            ref.child("beachName").setValue(getCurrBeachName());
+                            ref.child("hotelName").setValue(marker.getTitle());
+                            ref.child("hotelInfo").setValue(marker.getSnippet());
                             ref.child("url").setValue(uri);
                         }
                         try {
@@ -504,6 +530,18 @@ public class MapsActivity extends AppCompatActivity
         googlePlaceUrl.append("&sensor=true");
         googlePlaceUrl.append("&key="+MAPS_API_KEY);
 
+        return googlePlaceUrl.toString();
+    }
+
+    public static String getLodgingUrl(double latitude, double longitude, String nearbyPlace, int radius)
+    {
+        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
+        googlePlaceUrl.append("location="+latitude+","+longitude);
+        googlePlaceUrl.append("&radius="+radius);
+        googlePlaceUrl.append("&name="+nearbyPlace);
+        googlePlaceUrl.append("&type=lodging");
+        googlePlaceUrl.append("&sensor=true");
+        googlePlaceUrl.append("&key="+MAPS_API_KEY);
         return googlePlaceUrl.toString();
     }
 

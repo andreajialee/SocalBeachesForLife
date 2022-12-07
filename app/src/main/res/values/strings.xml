@@ -19,6 +19,11 @@
     <string name="DeleteReview">Delete Review</string>
     <string name="ManageReview">Manage Review</string>
     <string name="last_trip">Last Trip</string>
+    <string name="beach_name">Beach Name</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
+    <string name="hotel_name">Hotel Name</string>
+    <string name="route_to_hotel">Route to Hotel</string>
 
 
 </resources>

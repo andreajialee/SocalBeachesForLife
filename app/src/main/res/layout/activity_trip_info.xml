@@ -7,45 +7,170 @@
     tools:context=".activities.TripInfo">
 
     <TextView
+        android:id="@+id/beachTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Saved Beach Trip"
+        android:ems="12"
+        android:textSize="24sp"
+        android:layout_marginTop="25dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <TextView
         android:id="@+id/beachName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="Beach Name: "
-        android:textAlignment="center"
+        android:text="@string/beach_name"
+        android:ems="14"
         android:textSize="20sp"
-        android:paddingTop="100dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/beachTitle"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         />
-
+    <TextView
+        android:id="@+id/startTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_time"
+        android:ems="12"
+        android:textSize="24sp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/beachName"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
     <TextView
         android:id="@+id/startTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="Start Time: "
-        android:textAlignment="center"
+        android:text="@string/start_time"
+        android:ems="14"
         android:textSize="20sp"
-        android:paddingTop="50dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/startTitle"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/beachName"
+        app:layout_constraintLeft_toLeftOf="parent"
         />
 
+    <TextView
+        android:id="@+id/endTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/end_time"
+        android:ems="12"
+        android:textSize="24sp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/startTime"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
     <TextView
         android:id="@+id/endTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:text="End Time: "
-        android:textAlignment="center"
+        android:text="@string/end_time"
+        android:ems="14"
         android:textSize="20sp"
-        android:paddingTop="50dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/endTitle"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/startTime"
+        app:layout_constraintLeft_toLeftOf="parent"
         />
+    <TextView
+        android:id="@+id/durationTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duration"
+        android:ems="12"
+        android:textSize="24sp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/endTime"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Duration"
+        android:ems="14"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/durationTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <Button
+        android:id="@+id/beachButton"
+        android:ems="14"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:text="Route to Beach"
+        android:textSize="15sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/duration"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <TextView
+        android:id="@+id/hotelTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Saved Hotel Trip"
+        android:ems="12"
+        android:textSize="24sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/beachButton"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <TextView
+        android:id="@+id/hotelBeach"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Beach Name"
+        android:ems="14"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/hotelTitle"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <TextView
+        android:id="@+id/hotelName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hotel Name"
+        android:ems="14"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/hotelBeach"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+    <TextView
+        android:id="@+id/hotelInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hotel Information"
+        android:ems="14"
+        android:textSize="20sp"
+        app:layout_constraintTop_toBottomOf="@id/hotelName"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
+    <Button
+        android:id="@+id/hotelButton"
+        android:ems="14"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:text="@string/route_to_hotel"
+        android:textSize="15sp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/hotelInfo"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

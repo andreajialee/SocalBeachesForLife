@@ -50,8 +50,8 @@ public class RouteGetter extends AsyncTask<Object, String, String> {
             HashMap<String, String> directionsGooglePlace = routeList.get(i);
             ETA = Math.min(Double.parseDouble(directionsGooglePlace.get("duration")), ETA);
         }
-        NearbyBeaches.ETA = ETA;
-        ParkingLots.ETA = ETA;
-        MapsActivity.duration = ETA;
+        NearbyBeaches.ETA = ETA/60;
+        ParkingLots.ETA = ETA/60;
+        MapsActivity.duration = (int)(ETA/60);
     }
 }
