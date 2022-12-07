@@ -7,9 +7,10 @@
         <entry key="app/src/main/res/drawable/ic_direction_icon.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_add_review.xml" value="0.22146739130434784" />
         <entry key="app/src/main/res/layout/activity_delete_review.xml" value="0.21331521739130435" />
+        <entry key="app/src/main/res/layout/activity_favorite_beaches.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_home.xml" value="0.22146739130434784" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
-        <entry key="app/src/main/res/layout/activity_manage_reviews.xml" value="0.2628992628992629" />
+        <entry key="app/src/main/res/layout/activity_manage_reviews.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_maps.xml" value="0.22146739130434784" />
         <entry key="app/src/main/res/layout/activity_profile.xml" value="0.22146739130434784" />
         <entry key="app/src/main/res/layout/activity_register.xml" value="0.1" />
@@ -17,6 +18,7 @@
         <entry key="app/src/main/res/layout/activity_restaurant_list.xml" value="0.22146739130434784" />
         <entry key="app/src/main/res/layout/activity_review_menu.xml" value="0.2105978260869565" />
         <entry key="app/src/main/res/layout/activity_trip_info.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/custom_beach_view.xml" value="0.23324275362318841" />
         <entry key="app/src/main/res/layout/custom_info_contents.xml" value="0.11145833333333334" />
         <entry key="app/src/main/res/layout/custom_list_view.xml" value="0.2045852661132813" />
       </map>

@@ -24,9 +24,6 @@
             android:name=".activities.TripInfo"
             android:exported="false" />
         <activity
-            android:name=".models.RestaurantList"
-            android:exported="false" />
-        <activity
             android:name=".activities.HomeActivity"
             android:exported="false" />
         <!--
@@ -60,6 +57,10 @@
             android:name=".activities.ManageReview"
             android:exported="false"
             android:label="@string/ManageReview" />
+        <activity
+            android:name=".activities.ViewFavoritesActivity"
+            android:exported="false"
+            android:label="Favorite Beaches" />
         <activity
             android:name=".activities.Profile"
             android:exported="false"

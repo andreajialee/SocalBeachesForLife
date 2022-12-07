@@ -84,7 +84,14 @@ public class ReviewMenu extends AppCompatActivity {
                                                 user = "Anonymous";
                                             }
                                             String comment = (String) snaps.child("comment").getValue();
-                                            Double test = (Double) snaps.child("starCount").getValue();
+                                            Double test = 0.0;
+                                            try {
+                                                test = (Double) snaps.child("starCount").getValue();
+                                            } catch(ClassCastException e) {
+                                                Long temp = (Long) snaps.child("starCount").getValue();
+                                                test = (double) temp;
+                                            }
+
                                             Float rat = test.floatValue();
 
                                             mStorageRef.child(snaps.getKey()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {

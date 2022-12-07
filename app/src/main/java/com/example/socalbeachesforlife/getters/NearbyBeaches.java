@@ -79,14 +79,6 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
             double olatitude = oLocation.getLatitude();
             double olongitude = oLocation.getLongitude();
 
-            List<HashMap<String, String>> directionsNearbyPlaceList;
-            String rurl = getUrl(olatitude, olongitude, lat, lng);
-            Object dataTransfer[] = new Object[2];
-            dataTransfer[0] = mMap;
-            dataTransfer[1] = rurl;
-            //RouteGetter routeGetter = new RouteGetter();
-            //routeGetter.execute(dataTransfer);
-
             if (count < 5) {
                 likelyPlaceLatLngs[count] = latLng;
                 likelyPlaceNames[count] = placeName;
@@ -126,26 +118,5 @@ public class NearbyBeaches extends AsyncTask<Object, String, String> {
         }
         mMap.moveCamera(CameraUpdateFactory.newLatLng(likelyPlaceLatLngs[validBeach]));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(10));
-
-    }
-
-    private String getUrl(double olatitude, double olongitude, double lat, double lng)
-    {
-        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/directions/json?");
-        googlePlaceUrl.append("origin="+olatitude+","+olongitude);
-        googlePlaceUrl.append("&destination="+lat+","+lng);
-        googlePlaceUrl.append("&key="+MAPS_API_KEY);
-
-        return googlePlaceUrl.toString();
-    }
-
-    private String getRestaurantUrl(double latitude, double longitude, int radius)
-    {
-        StringBuilder googlePlaceUrl = new StringBuilder("https://maps.googleapis.com/maps/api/place/nearbysearch/json?");
-        googlePlaceUrl.append("location="+latitude+","+longitude);
-        googlePlaceUrl.append("&radius="+radius);
-        googlePlaceUrl.append("&type=restaurant");
-        googlePlaceUrl.append("&key="+MAPS_API_KEY);
-        return googlePlaceUrl.toString();
     }
 }

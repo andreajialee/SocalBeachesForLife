@@ -37,6 +37,8 @@ import com.example.socalbeachesforlife.getters.NearbyRestrooms;
 import com.example.socalbeachesforlife.getters.ParkingLots;
 import com.example.socalbeachesforlife.R;
 import com.example.socalbeachesforlife.getters.RouteGetter;
+import com.example.socalbeachesforlife.models.Beach;
+import com.example.socalbeachesforlife.models.Review;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -57,6 +59,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
 import java.util.Formatter;
+import java.util.UUID;
 
 /**
  * An activity that displays a map showing the place at the device's current location.
@@ -94,9 +97,9 @@ public class MapsActivity extends AppCompatActivity
     public static LatLng[] likelyPlaceLatLngs;
 
     private int REST_RADIUS = 1000;
-    private Button mRadius;
     private Button mProfile;
     private Button mReview;
+    private Button mFavorite;
     private final String[] radi = new String[]{"1000", "2000", "3000"};
 
     private Circle circle;
@@ -147,6 +150,14 @@ public class MapsActivity extends AppCompatActivity
             }
         });
 
+        mFavorite = (Button) findViewById(R.id.favorite_button);
+        mFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                addFavoriteBeach();
+            }
+        });
+
         mDirection = (ImageButton) findViewById(R.id.direction_button);
 
         // Build the map.
@@ -156,6 +167,31 @@ public class MapsActivity extends AppCompatActivity
 
         // Prompt the user for permission.
         getLocationPermission();
+    }
+
+    private void addFavoriteBeach() {
+        Beach beach = new Beach(getCurrBeachName(),getBeachUrl());
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        FirebaseDatabase rootNode = FirebaseDatabase.getInstance();
+        DatabaseReference reference = rootNode.getReference("Users");
+        DatabaseReference reference1 = reference.child(mAuth.getCurrentUser().getUid());
+
+        String id = UUID.randomUUID().toString();
+
+        FirebaseDatabase.getInstance()
+                .getReference("Users").child(mAuth.getCurrentUser().getUid())
+                        .child("favorites").child(id).setValue(beach).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if(task.isSuccessful()) {
+                            Toast.makeText(MapsActivity.this, "Added Beach to Favorites!", Toast.LENGTH_LONG).show();
+                        }
+                        else {
+                            Toast.makeText(MapsActivity.this, "Unable to add beach to favorites", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
     }
 
     private void showRadi() {
@@ -208,6 +244,8 @@ public class MapsActivity extends AppCompatActivity
                 dataRestroomTransfer[1] = restroomUrl;
                 nearbyRestrooms.execute(dataRestroomTransfer);
 
+                mFavorite.setVisibility(View.VISIBLE);
+
                 // Position the map's camera at the location of the marker.
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, DEFAULT_ZOOM));
 
@@ -255,6 +293,17 @@ public class MapsActivity extends AppCompatActivity
             showCurrentPlace();
         }
         return true;
+    }
+
+    public String getBeachUrl() {
+        double curLat = lastKnownLocation.getLatitude();
+        double curLon = lastKnownLocation.getLongitude();
+        double beachLat = getCurrBeachLoc().latitude;
+        double beachLon = getCurrBeachLoc().longitude;
+        String uri = "https://www.google.com/maps/dir/?api=1&origin=" + curLat + ","+ curLon +
+                "&destination=" + beachLat + "," + beachLon +
+                "&travelmode=driving&dir_action=navigate";
+        return uri;
     }
 
     /**

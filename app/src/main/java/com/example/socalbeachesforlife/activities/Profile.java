@@ -22,7 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 public class Profile extends AppCompatActivity implements View.OnClickListener{
-    private TextView name, email, manage_reviews, logout, saved_routes, find_beach;
+    private TextView name, email, manage_reviews, logout, saved_routes, find_beach, favorites;
     private static final String TAG = "Profile.java ";
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     @Override
@@ -53,6 +53,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener{
         saved_routes = (Button) findViewById(R.id.saved_route);
         saved_routes.setOnClickListener(this);
 
+        favorites = (Button) findViewById(R.id.favorites);
+        favorites.setOnClickListener(this);
+
         manage_reviews = (Button) findViewById(R.id.manage_review);
         manage_reviews.setOnClickListener(this);
 
@@ -69,6 +72,9 @@ public class Profile extends AppCompatActivity implements View.OnClickListener{
         switch (view.getId()){
             case R.id.saved_route:
                 startActivity(new Intent(this, TripInfo.class));
+                break;
+            case R.id.favorites:
+                startActivity(new Intent(this, ViewFavoritesActivity.class));
                 break;
             case R.id.manage_review:
                 startActivity(new Intent(this, ManageReview.class));

@@ -46,6 +46,23 @@
         android:text="Add A Review"
         android:textColor="#ffffff" />
 
+    <Button
+        android:id="@+id/favorite_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="75dp"
+        android:layout_marginEnd="296dp"
+        android:layout_marginBottom="5dp"
+        android:background="#359c5e"
+        android:padding="8dp"
+        android:text="Favorite Beach"
+        android:visibility="invisible"
+        android:textColor="#ffffff"
+        />
+
     <ImageButton
         android:id="@+id/direction_button"
         android:layout_width="wrap_content"
