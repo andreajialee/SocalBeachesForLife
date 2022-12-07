@@ -2,6 +2,17 @@
 
 Create a mobile application "SoCal Beaches for Life" for CSCI-310
 
+Sprint 2.5
+
+The entirety of feature 1 has been completed. We are able to show a route from the current user’s location to the beach’s parking lot by driving when the beach parking lot marker is clicked and the user clicks the direction button; similarly, we show a route from the beach’s nearby restaurant from the beach by walking. We also saved the trip information into Firebase under the user’s profile.
+
+Feature 2 was improved upon based on our TA’s recommendations. We altered our code so that the user can choose a beach, then pick a radius of 1000, 2000, or 3000 feet, and then show the restaurants with markers.
+
+The entirety of feature 3 has been completed. The user is able to review the beaches with their rating out of stars, suggestions, pictures with descriptions, if the user wants to stay anonymous, and etc. We also allowed the user to delete their reviews. The user is also able to view all of the reviews of beaches that other users have posted.
+
+We fixed some bugs that occurred when the application first requests the user’s location. We realized that our application wasn’t fetching the proper location at times, so we fixed this.
+
+
 **Important Information**
 We ran our code with a Pixel 2 API 33 Emulator, instead of the normal Nougat with API 24. Our emulator would not load google maps with the old device, so we had to change the emulator.
 
