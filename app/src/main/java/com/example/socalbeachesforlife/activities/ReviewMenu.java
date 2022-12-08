@@ -107,6 +107,7 @@ public class ReviewMenu extends AppCompatActivity {
                                                     ReviewView v = new ReviewView(mUri, rat, user, comment);
                                                     reviews.add(v);
                                                     list.setAdapter(adapt);
+                                                    e.printStackTrace();
                                                 }
                                             });
                                         }

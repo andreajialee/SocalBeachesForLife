@@ -45,6 +45,11 @@ public class ReviewViewArrayAdapter extends ArrayAdapter<ReviewView> {
             System.out.println(currentNumberPosition.getNumbersImageId().toString());
             Picasso.with(context).load(currentNumberPosition.getNumbersImageId()).fit().into(imag);
         }
+        else {
+            imag.setVisibility(View.GONE);
+        }
+
+
 
         RatingBar bar = currentItemView.findViewById(R.id.rating);
         bar.setRating(currentNumberPosition.getRatings());

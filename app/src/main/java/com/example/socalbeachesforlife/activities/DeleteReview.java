@@ -73,7 +73,14 @@ public class DeleteReview extends AppCompatActivity implements View.OnClickListe
                                 anon.setText("Anonymous: No");
                             }
                             comments.setText("Comments: " + (String) postSnapshot.child("comment").getValue());
-                            Long test = (Long) postSnapshot.child("starCount").getValue();
+                            Double test = 0.0;
+                            try {
+                                test = (Double) postSnapshot.child("starCount").getValue();
+                            } catch (ClassCastException e) {
+                                Long temp = (Long) postSnapshot.child("starCount").getValue();
+                                test = (double) temp;
+                            }
+                            
                             Float num = test.floatValue();
                             bar.setRating((Float) num);
 

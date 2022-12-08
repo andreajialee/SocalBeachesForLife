@@ -66,6 +66,10 @@
             android:exported="false"
             android:label="@string/profile" />
         <activity
+            android:name=".activities.ManageFavorite"
+            android:exported="false"
+            android:label="Manage Favorite" />
+        <activity
             android:name=".activities.RegisterUser"
             android:exported="false" />
         <activity

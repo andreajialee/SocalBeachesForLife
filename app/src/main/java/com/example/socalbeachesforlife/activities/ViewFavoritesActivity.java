@@ -74,8 +74,9 @@ public class ViewFavoritesActivity extends AppCompatActivity{
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view,
                                                 int position, long id) {
-                            Intent i = new Intent(ViewFavoritesActivity.this, ReviewMenu.class);
+                            Intent i = new Intent(ViewFavoritesActivity.this, ManageFavorite.class);
                             i.putExtra("bname", listBeaches.get(position));
+                            i.putExtra("uri", listUrls.get(position));
                             startActivity(i);
                         }
                     });
